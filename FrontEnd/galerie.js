@@ -2,56 +2,52 @@
 const reponse = await fetch('http://localhost:5678/api/works');
 const oeuvres = await reponse.json();
 
+// Applique de l'effet filtre clique, a ameliorer
 
-// function creerBaliseFigure(oeuvre, galerie){
-//   let oeuvreId = document.createElement("figure");
-//   oeuvreId = oeuvre.id
-//   galerie.appendChild(oeuvre)
-//   return oeuvre;
-// }
+function activerEffetClique(boutton){
+  if (document.querySelector('.filtre-non-clique')) {
+    filtreTous.classList.add('filtre-non-clique');
+    filtreObjets.classList.add('filtre-non-clique');
+    filtreAppartements.classList.add('filtre-non-clique');
+    filtreHotelsEtRestaurants.classList.add('filtre-non-clique');
+    boutton.classList.remove('filtre-non-clique');
+    filtreTous.classList.remove('filtre-clique');
+    filtreObjets.classList.remove('filtre-clique');
+    filtreAppartements.classList.remove('filtre-clique');
+    filtreHotelsEtRestaurants.classList.remove('filtre-clique');
+    boutton.classList.add('filtre-clique');
+  }
+}
 
-// function creerBaliseImage(oeuvre){
-//   let oeuvreImage = document.createElement("img");
-//   oeuvreImage.src = oeuvre.imageURL;  
-//   oeuvreImage.alt = oeuvre.title;
-//   oeuvre.appendChild(oeuvreImage);
-//   return oeuvre;
-// }
-
-// function creerBaliseFigcaption(oeuvre){
-//   let oeuvreText = document.createElement("figcaption");
-//   oeuvreText.innerText = oeuvre.title;
-//   oeuvre.appendChild(oeuvreText);
-//   return oeuvre;
-// }
-
-
-// Appel des fonction definie juste au dessus pour charger la galerie des travaux
-// function genererGalerie(oeuvres){
-//   const galerie = document.querySelector(".gallery");
-//   for (let i = 0; i < oeuvres.length; i++){
-//     const oeuvre = oeuvres[i];
-//     creerBaliseFigure(oeuvre);
-//     creerBaliseImage(oeuvre);
-//     creerBaliseFigcaption(oeuvre);
-//   }
-//   return galerie;
-// }
-
-
-// genererGalerie(oeuvres);
+const filtreTous = document.querySelector("#tous");
+filtreTous.addEventListener('click', () => {
+  activerEffetClique(filtreTous);
+  filtrageGallerie(filtreTous);
+});
+const filtreObjets = document.querySelector("#objets");
+filtreObjets.addEventListener('click', () => {
+  activerEffetClique(filtreObjets);
+  filtrageGallerie(filtreObjets);
+});
+const filtreAppartements = document.querySelector("#appartements");
+filtreAppartements.addEventListener('click', () => {
+  activerEffetClique(filtreAppartements);
+  filtrageGallerie(filtreAppartements);
+});
+const filtreHotelsEtRestaurants = document.querySelector("#hotels-et-restaurants");
+filtreHotelsEtRestaurants.addEventListener('click', () => {
+  activerEffetClique(filtreHotelsEtRestaurants);
+  filtrageGallerie(filtreHotelsEtRestaurants);
+});
 
 
-// console.log(oeuvres)
 
-// Realisation de/des fonctions de filtres:
-
-function genererOeuvres(oeuvres){
-  for (let i = 0; i < oeuvres.length; i++){
-    const oeuvre = oeuvres[i];
+function genererOeuvres(figure){
+  for (let i = 0; i < figure.length; i++){
+    const oeuvre = figure[i];
     const galerie = document.querySelector(".gallery");
     const oeuvreElement = document.createElement("figure");
-    oeuvreElement.dataset.id = oeuvres[i].id
+    oeuvreElement.dataset.id = figure[i].id
     const imageOeuvre = document.createElement("img");
     imageOeuvre.src = oeuvre.imageUrl;
     imageOeuvre.alt = oeuvre.title;
@@ -63,6 +59,32 @@ function genererOeuvres(oeuvres){
   }
 }
 
-genererOeuvres(oeuvres);
+genererOeuvres(oeuvres)
 
+
+function filtrageGallerie(filtre){
+  if (filtre === filtreTous){
+      document.querySelector(".gallery").innerHTML = "";
+      genererOeuvres(oeuvres);
+  } 
+  else if (filtre === filtreObjets) {
+      filtrageOeuvre("Objets");
+  }
+
+  else if (filtre === filtreAppartements) {
+    filtrageOeuvre("Appartements");
+  }
+
+  else if (filtre === filtreHotelsEtRestaurants) {
+    filtrageOeuvre("Hotels & restaurants");
+  }
+}
+
+function filtrageOeuvre(categorie){
+  const oeuvresFiltrees = oeuvres.filter(function(oeuvre){
+    return oeuvre.category.name === categorie;
+  });
+  document.querySelector(".gallery").innerHTML = "";
+  genererOeuvres(oeuvresFiltrees);
+};
 
