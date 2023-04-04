@@ -2,45 +2,42 @@
 const reponse = await fetch('http://localhost:5678/api/works');
 const oeuvres = await reponse.json();
 
-// Applique de l'effet filtre clique, a ameliorer
+
+const allFiltres = document.querySelectorAll(".boutton-filtre");
+const filtreTous = document.querySelector("#tous");
+const filtreObjets = document.querySelector("#objets");
+const filtreAppartements = document.querySelector("#appartements");
+const filtreHotelsEtRestaurants = document.querySelector("#hotels-et-restaurants");
 
 function activerEffetClique(boutton){
   if (document.querySelector('.filtre-non-clique')) {
-    
-    allFiltres.classList.add('filtre-non-clique');
-    // filtreTous.classList.add('filtre-non-clique');
-    // filtreObjets.classList.add('filtre-non-clique');
-    // filtreAppartements.classList.add('filtre-non-clique');
-    // filtreHotelsEtRestaurants.classList.add('filtre-non-clique');
+    allFiltres.forEach((filtre) => {
+      filtre.classList.add('filtre-non-clique');
+    });
     boutton.classList.remove('filtre-non-clique');
-    allFiltres.classList.remove('filtre-clique');
-    // filtreTous.classList.remove('filtre-clique');
-    // filtreObjets.classList.remove('filtre-clique');
-    // filtreAppartements.classList.remove('filtre-clique');
-    // filtreHotelsEtRestaurants.classList.remove('filtre-clique');
+    allFiltres.forEach((filtre) => {
+      filtre.classList.remove('filtre-clique');
+    });
     boutton.classList.add('filtre-clique');
   }
 }
 
-const allFiltres = document.querySelectorAll(".boutton-filtre");
 
-
-const filtreTous = document.querySelector("#tous");
 filtreTous.addEventListener('click', () => {
   activerEffetClique(filtreTous);
   filtrageGallerie(filtreTous);
 });
-const filtreObjets = document.querySelector("#objets");
+
 filtreObjets.addEventListener('click', () => {
   activerEffetClique(filtreObjets);
   filtrageGallerie(filtreObjets);
 });
-const filtreAppartements = document.querySelector("#appartements");
+
 filtreAppartements.addEventListener('click', () => {
   activerEffetClique(filtreAppartements);
   filtrageGallerie(filtreAppartements);
 });
-const filtreHotelsEtRestaurants = document.querySelector("#hotels-et-restaurants");
+
 filtreHotelsEtRestaurants.addEventListener('click', () => {
   activerEffetClique(filtreHotelsEtRestaurants);
   filtrageGallerie(filtreHotelsEtRestaurants);
@@ -69,20 +66,20 @@ genererOeuvres(oeuvres)
 
 
 function filtrageGallerie(filtre){
-  if (filtre === filtreTous){
+  switch (filtre) {
+    case filtreTous: 
       document.querySelector(".gallery").innerHTML = "";
       genererOeuvres(oeuvres);
-  } 
-  else if (filtre === filtreObjets) {
+    break;
+    case filtreObjets:
       filtrageOeuvre("Objets");
-  }
-
-  else if (filtre === filtreAppartements) {
-    filtrageOeuvre("Appartements");
-  }
-
-  else if (filtre === filtreHotelsEtRestaurants) {
-    filtrageOeuvre("Hotels & restaurants");
+    break;
+    case filtreAppartements:
+      filtrageOeuvre("Appartements");
+    break;
+    case filtreHotelsEtRestaurants:
+      filtrageOeuvre("Hotels & restaurants");
+    break;
   }
 }
 
