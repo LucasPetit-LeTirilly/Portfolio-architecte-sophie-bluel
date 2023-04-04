@@ -6,18 +6,24 @@ const oeuvres = await reponse.json();
 
 function activerEffetClique(boutton){
   if (document.querySelector('.filtre-non-clique')) {
-    filtreTous.classList.add('filtre-non-clique');
-    filtreObjets.classList.add('filtre-non-clique');
-    filtreAppartements.classList.add('filtre-non-clique');
-    filtreHotelsEtRestaurants.classList.add('filtre-non-clique');
+    
+    allFiltres.classList.add('filtre-non-clique');
+    // filtreTous.classList.add('filtre-non-clique');
+    // filtreObjets.classList.add('filtre-non-clique');
+    // filtreAppartements.classList.add('filtre-non-clique');
+    // filtreHotelsEtRestaurants.classList.add('filtre-non-clique');
     boutton.classList.remove('filtre-non-clique');
-    filtreTous.classList.remove('filtre-clique');
-    filtreObjets.classList.remove('filtre-clique');
-    filtreAppartements.classList.remove('filtre-clique');
-    filtreHotelsEtRestaurants.classList.remove('filtre-clique');
+    allFiltres.classList.remove('filtre-clique');
+    // filtreTous.classList.remove('filtre-clique');
+    // filtreObjets.classList.remove('filtre-clique');
+    // filtreAppartements.classList.remove('filtre-clique');
+    // filtreHotelsEtRestaurants.classList.remove('filtre-clique');
     boutton.classList.add('filtre-clique');
   }
 }
+
+const allFiltres = document.querySelectorAll(".boutton-filtre");
+
 
 const filtreTous = document.querySelector("#tous");
 filtreTous.addEventListener('click', () => {
