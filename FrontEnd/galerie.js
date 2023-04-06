@@ -9,16 +9,16 @@ const filtreObjets = document.querySelector("#objets");
 const filtreAppartements = document.querySelector("#appartements");
 const filtreHotelsEtRestaurants = document.querySelector("#hotels-et-restaurants");
 
-function activerEffetClique(boutton){
+function activerEffetClique(filtreClique){
   if (document.querySelector('.filtre-non-clique')) {
     allFiltres.forEach((filtre) => {
       filtre.classList.add('filtre-non-clique');
     });
-    boutton.classList.remove('filtre-non-clique');
+    filtreClique.classList.remove('filtre-non-clique');
     allFiltres.forEach((filtre) => {
       filtre.classList.remove('filtre-clique');
     });
-    boutton.classList.add('filtre-clique');
+    filtreClique.classList.add('filtre-clique');
   }
 }
 
