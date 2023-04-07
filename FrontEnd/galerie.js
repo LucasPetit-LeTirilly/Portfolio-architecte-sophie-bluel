@@ -1,54 +1,13 @@
-
-const reponse = await fetch('http://localhost:5678/api/works');
-const oeuvres = await reponse.json();
-
-
-const allFiltres = document.querySelectorAll(".boutton-filtre");
-const filtreTous = document.querySelector("#tous");
-const filtreObjets = document.querySelector("#objets");
-const filtreAppartements = document.querySelector("#appartements");
-const filtreHotelsEtRestaurants = document.querySelector("#hotels-et-restaurants");
-
-function activerEffetClique(filtreClique){
-  if (document.querySelector('.filtre-non-clique')) {
-    allFiltres.forEach((filtre) => {
-      filtre.classList.add('filtre-non-clique');
-    });
-    filtreClique.classList.remove('filtre-non-clique');
-    allFiltres.forEach((filtre) => {
-      filtre.classList.remove('filtre-clique');
-    });
-    filtreClique.classList.add('filtre-clique');
-  }
-}
-
-
-filtreTous.addEventListener('click', () => {
-  activerEffetClique(filtreTous);
-  filtrageGallerie(filtreTous);
-});
-
-filtreObjets.addEventListener('click', () => {
-  activerEffetClique(filtreObjets);
-  filtrageGallerie(filtreObjets);
-});
-
-filtreAppartements.addEventListener('click', () => {
-  activerEffetClique(filtreAppartements);
-  filtrageGallerie(filtreAppartements);
-});
-
-filtreHotelsEtRestaurants.addEventListener('click', () => {
-  activerEffetClique(filtreHotelsEtRestaurants);
-  filtrageGallerie(filtreHotelsEtRestaurants);
-});
-
+const reponseOeuvres = await fetch('http://localhost:5678/api/works');
+const oeuvres = await reponseOeuvres.json();
+const reponseCategories = await fetch('http://localhost:5678/api/categories');
+const categoriesParDefaut = await reponseCategories.json();
 
 
 function genererOeuvres(figure){
+  const galerie = document.querySelector(".gallery");
   for (let i = 0; i < figure.length; i++){
     const oeuvre = figure[i];
-    const galerie = document.querySelector(".gallery");
     const oeuvreElement = document.createElement("figure");
     oeuvreElement.dataset.id = figure[i].id
     const imageOeuvre = document.createElement("img");
@@ -65,27 +24,46 @@ function genererOeuvres(figure){
 genererOeuvres(oeuvres)
 
 
-function filtrageGallerie(filtre){
-  switch (filtre) {
-    case filtreTous: 
-      document.querySelector(".gallery").innerHTML = "";
-      genererOeuvres(oeuvres);
-    break;
-    case filtreObjets:
-      filtrageOeuvre("Objets");
-    break;
-    case filtreAppartements:
-      filtrageOeuvre("Appartements");
-    break;
-    case filtreHotelsEtRestaurants:
-      filtrageOeuvre("Hotels & restaurants");
-    break;
+function genererBouttons(typeCategorie){
+  const ensembleBouttons = document.querySelector(".section-filtre");
+  const bouttonTous = document.createElement('button');
+  bouttonTous.dataset.id = 0;
+  bouttonTous.innerText = "Tous";
+  bouttonTous.classList.add('filtre-clique');
+  ensembleBouttons.appendChild(bouttonTous);
+  for (let i = 0; i < typeCategorie.length; i++){
+    const filtre = typeCategorie[i];
+    const bouttonElement = document.createElement("button");
+    bouttonElement.dataset.id = filtre.id;
+    bouttonElement.innerText = filtre.name;
+    bouttonElement.classList.add('filtre-non-clique');
+    ensembleBouttons.appendChild(bouttonElement);
   }
 }
 
-function filtrageOeuvre(categorie){
+genererBouttons(categoriesParDefaut)
+
+
+const tousLesBouttons = document.querySelectorAll('button');
+
+tousLesBouttons.forEach((ceBoutton) => ceBoutton.addEventListener('click', (e) => {
+  tousLesBouttons.forEach((x) => x.classList.remove('filtre-clique'));
+  tousLesBouttons.forEach((x) => x.classList.add('filtre-non-clique'));
+  e.target.classList.remove('filtre-non-clique');
+  e.target.classList.add('filtre-clique');
+  if (e.target.dataset.id == 0){
+    document.querySelector(".gallery").innerHTML = "";
+    genererOeuvres(oeuvres);
+  } 
+  else{
+    filtrageOeuvre(e.target.dataset.id);
+  }
+}));
+
+
+function filtrageOeuvre(filtreId){
   const oeuvresFiltrees = oeuvres.filter(function(oeuvre){
-    return oeuvre.category.name === categorie;
+    return oeuvre.category.id == filtreId;
   });
   document.querySelector(".gallery").innerHTML = "";
   genererOeuvres(oeuvresFiltrees);

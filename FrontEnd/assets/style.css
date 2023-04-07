@@ -148,6 +148,8 @@ li:hover {
 	background-color: white;
 	border: 1px solid #1D6154;
 	border-radius: 60px;
+	min-width: 6.25em;
+	padding: 9px 15px 9px 15px;
 }
 
 .filtre-clique {
@@ -158,22 +160,8 @@ li:hover {
 	background-color: #1D6154;
 	border: 1px solid #1D6154;
 	border-radius: 60px;
-}
-
-#tous {
-	padding: 9px 30px 9px 28px;
-}
-
-#objets {
-	padding: 9px 22px 9px 20px;
-}
-
-#appartements {
-	padding: 9px 15px 9px 14px;
-}
-
-#hotels-et-restaurants {
-	padding: 9px 11px 9px 14px;
+	min-width: 6.25em;
+	padding: 9px 15px 9px 15px;
 }
 
 .gallery {
