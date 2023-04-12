@@ -44,7 +44,7 @@ function genererBouttons(typeCategorie){
 genererBouttons(categoriesParDefaut)
 
 
-const tousLesBouttons = document.querySelectorAll('button');
+const tousLesBouttons = document.querySelectorAll('.section-filtre button');
 
 tousLesBouttons.forEach((ceBoutton) => ceBoutton.addEventListener('click', (e) => {
   tousLesBouttons.forEach((x) => x.classList.remove('filtre-clique'));
@@ -69,3 +69,9 @@ function filtrageOeuvre(filtreId){
   genererOeuvres(oeuvresFiltrees);
 };
 
+
+// Ligne a remettre quand site est fini
+
+// window.onbeforeunload = function () {
+//   localStorage.removeItem("userToken");
+// };

@@ -27,10 +27,10 @@ form.addEventListener('submit', x => {
   })
   .then((tokenId) => {
     if (tokenId !== false) {
-      console.log(tokenId)
       localStorage.setItem("userToken", JSON.stringify(tokenId));
       alert("Vous êtes connectée en tant qu'administratrice");
       location.href = "index.html";
     }
   })
 })
+
