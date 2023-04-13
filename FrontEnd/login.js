@@ -1,6 +1,6 @@
 const form = document.querySelector('#loginForm');
 
-form.addEventListener('submit', x => {
+form.addEventListener('submit', (x) => {
   x.preventDefault();
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
@@ -8,12 +8,13 @@ form.addEventListener('submit', x => {
     "email": email,
     "password": password
   };
-
-  const charge = new URLSearchParams(donneesLogin);
   
   fetch('http://localhost:5678/api/users/login', {
     method: "POST",
-    body: charge
+    body: JSON.stringify(donneesLogin),
+    headers: {
+      "Content-Type": "application/json"
+    }
   })
   .then(reponse => {
     if (reponse.status === 200) {

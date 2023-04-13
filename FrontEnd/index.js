@@ -15,9 +15,9 @@ function genererOeuvres(figure){
     imageOeuvre.alt = oeuvre.title;
     const titreOeuvre = document.createElement("figcaption");
     titreOeuvre.innerText = oeuvre.title;
-    galerie.appendChild(oeuvreElement);
     oeuvreElement.appendChild(imageOeuvre);
     oeuvreElement.appendChild(titreOeuvre);
+    galerie.appendChild(oeuvreElement);
   }
 }
 
@@ -94,18 +94,18 @@ function genererRectangleNoir (){
   const body = document.querySelector("body")
   const rectangleNoir = document.createElement('div');
   rectangleNoir.classList.add('rectangle-noir');
-  body.prepend(rectangleNoir);
   const iconeRectangle = document.createElement('img');
   iconeRectangle.src = "assets/icons/iconeModifier.svg";
   iconeRectangle.alt = "icone modifier";
-  rectangleNoir.appendChild(iconeRectangle);
-  const texteRectangle = document.createElement('p');
+    const texteRectangle = document.createElement('p');
   texteRectangle.innerText = "Mode édition";
-  rectangleNoir.appendChild(texteRectangle);
   const bouttonRectangle = document.createElement('button');
   bouttonRectangle.id = "boutton-publier-changement";
   bouttonRectangle.innerText = "publier les changements";
+  rectangleNoir.appendChild(iconeRectangle);
+  rectangleNoir.appendChild(texteRectangle);
   rectangleNoir.appendChild(bouttonRectangle);
+  body.prepend(rectangleNoir);
 }
 
 function genereBouttonModifierPhotoProfil(){
@@ -113,34 +113,34 @@ function genereBouttonModifierPhotoProfil(){
   const bouttonPhoto = document.createElement("button");
   bouttonPhoto.id = "boutton-modifier-photo-profil";
   bouttonPhoto.classList.add("boutton-modifier-photo");
-  portfolio.parentNode.insertBefore(bouttonPhoto, portfolio);
   const iconeBoutton = document.createElement("img");
   iconeBoutton.src = "assets/icons/iconeModifier.svg";
   iconeBoutton.alt = "icone modifier";
-  bouttonPhoto.appendChild(iconeBoutton);
   const texteBoutton = document.createElement("p");
   texteBoutton.innerText = "modifier"
+  bouttonPhoto.appendChild(iconeBoutton);
   bouttonPhoto.appendChild(texteBoutton);
+  portfolio.parentNode.insertBefore(bouttonPhoto, portfolio);
 }
 
 function genererBouttonModifierProjets(){
   const sectionPortfolio = document.querySelector("#portfolio");
   const TitreEtBoutton = document.createElement("div");
   TitreEtBoutton.classList.add("titre-h2-et-boutton")
-  sectionPortfolio.prepend(TitreEtBoutton);
   const h2Portfolio = document.querySelector("#portfolio h2");
-  TitreEtBoutton.appendChild(h2Portfolio);
   const bouttonProjets = document.createElement("button");
   bouttonProjets.id = "boutton-modifier-projets";
   bouttonProjets.classList.add("boutton-modifier-projets");
-  TitreEtBoutton.appendChild(bouttonProjets);
   const iconeBoutton = document.createElement("img");
   iconeBoutton.src = "assets/icons/iconeModifier.svg";
   iconeBoutton.alt = "icone modifier";
-  bouttonProjets.appendChild(iconeBoutton);
   const texteBoutton = document.createElement("p");
-  texteBoutton.innerText = "modifier"
+  texteBoutton.innerText = "modifier";
+  bouttonProjets.appendChild(iconeBoutton);
   bouttonProjets.appendChild(texteBoutton);
+  TitreEtBoutton.appendChild(h2Portfolio);
+  TitreEtBoutton.appendChild(bouttonProjets);
+  sectionPortfolio.prepend(TitreEtBoutton);
 }
 
 
@@ -149,41 +149,39 @@ function genererModale(){
   const modaleGalerie = document.createElement("aside");
   modaleGalerie.id = "modale-galerie";
   modaleGalerie.classList.add("display-hidden");
-  body.appendChild(modaleGalerie);
   const fenetreModaleGalerie = document.createElement("div");
   fenetreModaleGalerie.id = "fenetre-modale-galerie";
   fenetreModaleGalerie.classList.add("fenetre-modale-galerie");
-  modaleGalerie.appendChild(fenetreModaleGalerie);
   const croix = document.createElement("img");
   croix.id = "fermer-modale-galerie"
   croix.src = "assets/icons/croix.svg";
   croix.alt = "Fermer la fenêtre";
-  fenetreModaleGalerie.appendChild(croix);
   const titreModale = document.createElement("h2");
   titreModale.innerText = "Galerie Photo";
+  fenetreModaleGalerie.appendChild(croix);
   fenetreModaleGalerie.appendChild(titreModale);
-  genererMiniGalerie(fenetreModaleGalerie,oeuvres);
+  modaleGalerie.appendChild(fenetreModaleGalerie);
+  body.appendChild(modaleGalerie);
+  genererMiniGalerie(oeuvres);
 
 }
 
-function genererMiniGalerie(fenetreParent,article){
+function genererMiniGalerie(article){
+  const selectFenetreModaleGalerie = document.querySelector("#fenetre-modale-galerie");
   const miniGalerieEdition = document.createElement("div");
   miniGalerieEdition.classList.add("mini-galerie");
-  fenetreParent.appendChild(miniGalerieEdition);
+  selectFenetreModaleGalerie.appendChild(miniGalerieEdition);
   for (let i = 0; i < article.length; i++){
     const oeuvre = article[i];
     const oeuvreElement = document.createElement("article");
     oeuvreElement.dataset.id = article[i].id;
-    oeuvreElement.appendChild(miniGalerieEdition);
     const imageOeuvre = document.createElement("img");
     imageOeuvre.src = oeuvre.imageUrl;
     imageOeuvre.alt = oeuvre.title;
     oeuvreElement.appendChild(imageOeuvre);
-    
+    miniGalerieEdition.appendChild(oeuvreElement);
   }
-  console.log(fenetreParent);
-  
-}
+} 
 
 
 
@@ -218,9 +216,3 @@ function fermerModale(){
   modaleGalerie.classList.add("display-hidden");
 }
 
-
-// Ligne a remettre quand site est fini
-
-// window.onbeforeunload = function () {
-//   localStorage.removeItem("userToken");
-// };
