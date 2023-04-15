@@ -163,7 +163,14 @@ function genererModale(){
   modaleGalerie.appendChild(fenetreModaleGalerie);
   body.appendChild(modaleGalerie);
   genererMiniGalerie(oeuvres);
-
+  const ajouterUnePhoto = document.createElement("p");
+  ajouterUnePhoto.classList.add("boutton-ajouter-une-photo");
+  ajouterUnePhoto.innerText = "Ajouter une photo";
+  const supprimerLaGalerie = document.createElement("p");
+  supprimerLaGalerie.classList.add("supprimer-la-galerie");
+  supprimerLaGalerie.innerText = "Supprimer la galerie";
+  fenetreModaleGalerie.appendChild(ajouterUnePhoto);
+  fenetreModaleGalerie.appendChild(supprimerLaGalerie);
 }
 
 function genererMiniGalerie(article){
@@ -175,10 +182,31 @@ function genererMiniGalerie(article){
     const oeuvre = article[i];
     const oeuvreElement = document.createElement("article");
     oeuvreElement.dataset.id = article[i].id;
+    oeuvreElement.classList.add("article-mini-galerie");
+    const conteneurImageEtLogo = document.createElement("div");
+    conteneurImageEtLogo.classList.add("conteneur-image-et-logo");
     const imageOeuvre = document.createElement("img");
+    imageOeuvre.classList.add("image-oeuvre-mini-galerie");
     imageOeuvre.src = oeuvre.imageUrl;
     imageOeuvre.alt = oeuvre.title;
-    oeuvreElement.appendChild(imageOeuvre);
+    const logoCorbeille = document.createElement("img");
+    logoCorbeille.classList.add("logo-corbeille-mini-galerie");
+    logoCorbeille.id = `supprimerOeuvre${article[i].id}`;
+    logoCorbeille.src = "assets/icons/logo-corbeille.svg";
+    logoCorbeille.alt = "Logo de corbeille";
+    if (oeuvreElement.dataset.id === "1"){
+      const logoDeplacer = document.createElement("img")
+      logoDeplacer.classList.add("logo-deplacer");
+      logoDeplacer.src = "assets/icons/fleche-deplacement.svg"
+      logoDeplacer.alt = "Logo des flèches de déplacement"
+      conteneurImageEtLogo.appendChild(logoDeplacer);
+    };
+    const textOeuvre = document.createElement("p");
+    textOeuvre.innerText = "éditer";
+    conteneurImageEtLogo.appendChild(imageOeuvre);
+    conteneurImageEtLogo.appendChild(logoCorbeille);
+    oeuvreElement.appendChild(conteneurImageEtLogo)
+    oeuvreElement.appendChild(textOeuvre);
     miniGalerieEdition.appendChild(oeuvreElement);
   }
 } 

@@ -333,29 +333,88 @@ footer nav ul {
 }
 
 #fermer-modale-galerie {
-	text-align: right;
 	width: 12px;
 	height: 12px;
 	margin-top: 32px;
-	margin-left: 92.3%;
+	margin-left: 85.7%;
+
 }
 
 .fenetre-modale-galerie h2 {
  font-family: 'Work Sans';
  font-size: 1.625em;
- font-weight: 800;
+ font-weight: 400;
  color: black;
 }
 
 .mini-galerie {
-	
+	width: 66%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	column-gap: 6px;
+	margin-top: 46px;
+	margin-left: 17%;
+	padding-bottom: 37px;
+	border-bottom: 1px solid #B3B3B3;
 }
 
+.conteneur-image-et-logo {
+ position: relative;
+}
+.image-oeuvre-mini-galerie {
+	width: 100%;
+}
+
+.logo-corbeille-mini-galerie {
+	width: 22%;
+	height: 16.3%;
+	position: absolute;
+	top: 5.5%;
+	left: 70%;
+}
+
+.logo-deplacer{
+	width: 22%;
+	height: 16.3%;
+	position: absolute;
+	top: 5.5%;
+	left: 45%;
+}
+
+.mini-galerie p {
+	font-family: 'Work Sans';
+	font-size: 0.75em;
+	font-weight: 400;
+	text-align: left;
+	margin-bottom: 10.55px;
+}
+
+.boutton-ajouter-une-photo {
+	display: inline-block;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 0.875em;
+	width: 37.6%;
+	color: white;
+	background-color: #1D6154;
+	margin-top: 38px;
+	margin-bottom: 23px;
+	padding: 10px 37.5px 10px 37.5px;
+	border-radius: 60px ;
+}
+
+.supprimer-la-galerie {
+	font-family: 'Syne';
+	font-weight: 400;
+	color: #D65353;
+	font-size: 0.875em;
+	margin-bottom: 48px;
+}
 
 /* Styles de la page de login */
 
 #login {
-	width: 50%;
+	width: 35%;
 	margin: auto;
 	margin-top: 10%;
 	margin-bottom: 10%;
@@ -380,13 +439,14 @@ footer nav ul {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 #login label {
+	font-size: 0.875em;
 	margin: 2em 0 1em 0;
 }
 
 #login a {
 	font-family: 'Work Sans';
 	font-weight: 500;
-	font-size: 1em;
+	font-size: 0.875em;
 	text-decoration: underline;	
 	display: block;
 }
@@ -394,11 +454,13 @@ footer nav ul {
 #login input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
+	font-size: 0.875em;
+	width: 47%;
+	height: 36px;
 	color: white;
 	background-color: #1D6154;
-	margin : 2em auto ;
+	margin-top: 37px;
 	margin-bottom: 28px;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
+	
+
 }
