@@ -172,7 +172,7 @@ function genererFenetreEditionGalerie(){
   fenetreEditionGalerie.appendChild(ajouterUnePhoto);
   fenetreEditionGalerie.appendChild(breakLine);
   fenetreEditionGalerie.appendChild(supprimerLaGalerie);
-  }
+}
 
 function genererMiniGalerie(article){
   const selectFenetreModaleGalerie = document.querySelector("#fenetre-edition-galerie");
@@ -227,17 +227,36 @@ function fermerFenetre(idDeLaFenetre){
   const fenetreAFermer = document.querySelector(idDeLaFenetre);
   fenetreAFermer.className = "";
   fenetreAFermer.classList.add("display-hidden");
-  console.log("hello");
 }
 
+let fenetreEditionGalerieExiste = false;
 let eventFermerFenetreEditionExiste = false;
+let eventFermerFenetreAjoutPhotoExiste = false;
+let eventRetourFenetreEditionExiste = false;
 
 const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets");
-
 bouttonModifierProjets.addEventListener('click', () => {
-  const verifSiFenetreExiste = document.querySelector("#modale-galerie");
-  if(verifSiFenetreExiste == null){
+  const verifSiFenetreEditionExiste = document.querySelector("#modale-galerie");
+  if(verifSiFenetreEditionExiste == null){
     genererFenetreEditionGalerie();
+    const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
+    tousLogosCorbeille.forEach((e) => {
+      e.addEventListener("click", () => {
+        const idADelete = e.id.match(/(\d+)/);
+        const realToken = JSON.stringify(tokenId.token);
+        console.log(tokenId.token);
+        console.log(realToken);
+        fetch("http://localhost:5678/api/works/"+idADelete[0], {
+        method: "DELETE",
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          'Authorization' : 'Bearer ' + tokenId.token
+         }
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+      })
+    })
   }
   ouvrirFenetre("#modale-galerie", "modale-galerie");
   
@@ -263,15 +282,44 @@ bouttonModifierProjets.addEventListener('click', () => {
 
   const bouttonAjouterUnePhoto = document.querySelector("#boutton-ajouter-une-photo");
   bouttonAjouterUnePhoto.addEventListener('click', () => {
-  const verifSiFenetreExiste = document.querySelector("#modale-ajout-photo");
-  if(verifSiFenetreExiste == null){
-    genererFenetreAjoutPhoto();
+    const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
+    if(verifSiFenetreAjoutPhotoExiste == null){
+      genererFenetreAjoutPhoto();
+    }
     fermerFenetre("#modale-galerie");
-  }
-  ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
+    ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
+
+    const croixFenetreAjoutPhoto = document.querySelector("#fermer-fenetre-ajout-photo");
+
+    if(!eventFermerFenetreAjoutPhotoExiste){
+      croixFenetreAjoutPhoto.addEventListener('click', () => {
+        fermerFenetre("#modale-ajout-photo")}
+        );
+      const clicRacineFenetre = document.querySelector("#modale-ajout-photo");
+      clicRacineFenetre.addEventListener("click", () => {
+        fermerFenetre("#modale-ajout-photo");
+      });
+      
+      const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
+      clicFenetreModale.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      })
+      eventFermerFenetreAjoutPhotoExiste = true;
+    }
+
+    const flecheFenetreAjoutPhoto = document.querySelector("#retour-a-fenetre-edition");
+    if(!eventRetourFenetreEditionExiste){
+      flecheFenetreAjoutPhoto.addEventListener("click", () => {
+        fermerFenetre("#modale-ajout-photo");
+        ouvrirFenetre("#modale-galerie", "modale-galerie");
+        })
+      eventRetourFenetreEditionExiste = true;
+    }
+  });
 });
 
-});
 
 function genererFenetreAjoutPhoto(){
   const body = document.querySelector("body");
@@ -283,6 +331,8 @@ function genererFenetreAjoutPhoto(){
   fenetreAjoutPhoto.classList.add("fenetre-ajout-photo");
   modaleAjoutPhoto.appendChild(fenetreAjoutPhoto);
   body.appendChild(modaleAjoutPhoto);
+  const divFlecheCroix = document.createElement("div");
+  divFlecheCroix.classList.add("div-fleche-croix");
   const fleche = document.createElement("img");
   fleche.id = "retour-a-fenetre-edition";
   fleche.src = "assets/icons/fleche.svg";
@@ -322,6 +372,10 @@ function genererFenetreAjoutPhoto(){
   selectCategorie.name = "categories";
   selectCategorie.id = "categorie-image";
   selectCategorie.required = true;
+  const categorieBlank = document.createElement("option");
+  categorieBlank.hidden = true;
+  categorieBlank.disabled = true;
+  categorieBlank.selected = true;
   const categorieObjets = document.createElement("option");
   categorieObjets.value = "Objets";
   categorieObjets.innerText = categorieObjets.value;
@@ -335,8 +389,9 @@ function genererFenetreAjoutPhoto(){
   bouttonValider.id = "boutton-valider-ajout-photo";
   bouttonValider.classList.add("boutton-valider-ajout-photo");
   bouttonValider.innerHTML = "Valider";
-  fenetreAjoutPhoto.appendChild(fleche);
-  fenetreAjoutPhoto.appendChild(croix);
+  divFlecheCroix.appendChild(fleche);
+  divFlecheCroix.appendChild(croix);
+  fenetreAjoutPhoto.appendChild(divFlecheCroix);
   fenetreAjoutPhoto.appendChild(titreModale);
   divAjoutPhoto.appendChild(imageNoPhoto);
   divAjoutPhoto.appendChild(ajouterPhoto);
@@ -344,6 +399,7 @@ function genererFenetreAjoutPhoto(){
   formAjoutPhoto.appendChild(labelTitre);
   formAjoutPhoto.appendChild(inputTitre);
   formAjoutPhoto.appendChild(labelCategorie);
+  selectCategorie.appendChild(categorieBlank);
   selectCategorie.appendChild(categorieObjets);
   selectCategorie.appendChild(categorieAppartements);
   selectCategorie.appendChild(categorieHotelRestaurant);
