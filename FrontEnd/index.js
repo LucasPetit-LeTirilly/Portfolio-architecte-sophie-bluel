@@ -24,6 +24,7 @@ function genererOeuvres(figure){
 genererOeuvres(oeuvres)
 
 
+
 function genererBouttons(typeCategorie){
   const ensembleBouttons = document.querySelector(".section-filtre");
   const bouttonTous = document.createElement('button');
@@ -73,22 +74,6 @@ function filtrageOeuvre(filtreId){
 
 let tokenId = localStorage.getItem("userToken");
 tokenId = JSON.parse(tokenId);
-
-
-if (tokenId.token !== null && "undefined") {
-  genererEditMode();
-  genererModale();
-
-}
-
-function genererEditMode() {
-  genererRectangleNoir();
-  genereBouttonModifierPhotoProfil();
-  genererBouttonModifierProjets();
-  const sectionFiltre = document.querySelector(".section-filtre");
-  sectionFiltre.classList.add('display-hidden');
-}
-
 
 function genererRectangleNoir (){
   const body = document.querySelector("body")
@@ -143,38 +128,54 @@ function genererBouttonModifierProjets(){
   sectionPortfolio.prepend(TitreEtBoutton);
 }
 
+function genererEditMode() {
+  genererRectangleNoir();
+  genereBouttonModifierPhotoProfil();
+  genererBouttonModifierProjets();
+  const sectionFiltre = document.querySelector(".section-filtre");
+  sectionFiltre.classList.add('display-hidden');
+}
 
-function genererModale(){
+if (tokenId.token !== null && "undefined") {
+  genererEditMode();
+}
+
+
+function genererFenetreEditionGalerie(){
   const body = document.querySelector("body");
-  const modaleGalerie = document.createElement("aside");
-  modaleGalerie.id = "modale-galerie";
-  modaleGalerie.classList.add("display-hidden");
-  const fenetreModaleGalerie = document.createElement("div");
-  fenetreModaleGalerie.id = "fenetre-modale-galerie";
-  fenetreModaleGalerie.classList.add("fenetre-modale-galerie");
+  const modaleEditionGalerie = document.createElement("aside");
+  modaleEditionGalerie.id = "modale-galerie";
+  modaleEditionGalerie.classList.add("display-hidden");
+  const fenetreEditionGalerie = document.createElement("div");
+  fenetreEditionGalerie.id = "fenetre-edition-galerie";
+  fenetreEditionGalerie.classList.add("fenetre-edition-galerie");
+  modaleEditionGalerie.appendChild(fenetreEditionGalerie);
+  body.appendChild(modaleEditionGalerie);
   const croix = document.createElement("img");
-  croix.id = "fermer-modale-galerie"
+  croix.id = "fermer-fenetre-edition-galerie";
   croix.src = "assets/icons/croix.svg";
   croix.alt = "Fermer la fenêtre";
   const titreModale = document.createElement("h2");
   titreModale.innerText = "Galerie Photo";
-  fenetreModaleGalerie.appendChild(croix);
-  fenetreModaleGalerie.appendChild(titreModale);
-  modaleGalerie.appendChild(fenetreModaleGalerie);
-  body.appendChild(modaleGalerie);
-  genererMiniGalerie(oeuvres);
-  const ajouterUnePhoto = document.createElement("p");
+  const ajouterUnePhoto = document.createElement("button");
   ajouterUnePhoto.classList.add("boutton-ajouter-une-photo");
+  ajouterUnePhoto.id = "boutton-ajouter-une-photo";
   ajouterUnePhoto.innerText = "Ajouter une photo";
-  const supprimerLaGalerie = document.createElement("p");
+  const breakLine = document.createElement("br");
+  const supprimerLaGalerie = document.createElement("button");
   supprimerLaGalerie.classList.add("supprimer-la-galerie");
+  supprimerLaGalerie.id = "boutton-supprimer-la-galerie";
   supprimerLaGalerie.innerText = "Supprimer la galerie";
-  fenetreModaleGalerie.appendChild(ajouterUnePhoto);
-  fenetreModaleGalerie.appendChild(supprimerLaGalerie);
-}
+  fenetreEditionGalerie.appendChild(croix);
+  fenetreEditionGalerie.appendChild(titreModale);
+  genererMiniGalerie(oeuvres);
+  fenetreEditionGalerie.appendChild(ajouterUnePhoto);
+  fenetreEditionGalerie.appendChild(breakLine);
+  fenetreEditionGalerie.appendChild(supprimerLaGalerie);
+  }
 
 function genererMiniGalerie(article){
-  const selectFenetreModaleGalerie = document.querySelector("#fenetre-modale-galerie");
+  const selectFenetreModaleGalerie = document.querySelector("#fenetre-edition-galerie");
   const miniGalerieEdition = document.createElement("div");
   miniGalerieEdition.classList.add("mini-galerie");
   selectFenetreModaleGalerie.appendChild(miniGalerieEdition);
@@ -194,6 +195,7 @@ function genererMiniGalerie(article){
     logoCorbeille.id = `supprimerOeuvre${article[i].id}`;
     logoCorbeille.src = "assets/icons/logo-corbeille.svg";
     logoCorbeille.alt = "Logo de corbeille";
+    
     if (oeuvreElement.dataset.id === "1"){
       const logoDeplacer = document.createElement("img")
       logoDeplacer.classList.add("logo-deplacer");
@@ -201,6 +203,7 @@ function genererMiniGalerie(article){
       logoDeplacer.alt = "Logo des flèches de déplacement"
       conteneurImageEtLogo.appendChild(logoDeplacer);
     };
+    
     const textOeuvre = document.createElement("p");
     textOeuvre.innerText = "éditer";
     conteneurImageEtLogo.appendChild(imageOeuvre);
@@ -212,35 +215,145 @@ function genererMiniGalerie(article){
 } 
 
 
-
-const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets");
-bouttonModifierProjets.addEventListener('click', ouvrirModale);
-
-function ouvrirModale(){
-  const modaleGalerie = document.querySelector("#modale-galerie");
-  if (modaleGalerie.classList.contains("display-hidden")){
-    modaleGalerie.classList.remove("display-hidden");
-    modaleGalerie.classList.add("modale-galerie");
+function ouvrirFenetre(idDeLaFenetre, classeDeLaFenetre){
+  const fenetreAOuvrir = document.querySelector(idDeLaFenetre);
+  if (fenetreAOuvrir.classList.contains("display-hidden")){
+    fenetreAOuvrir.classList.remove("display-hidden");
+    fenetreAOuvrir.classList.add(classeDeLaFenetre);
   }
 }
 
-const croixModaleGalerie = document.querySelector("#fermer-modale-galerie");
-croixModaleGalerie.addEventListener('click', fermerModale);
-
-const clicRacineModale = document.querySelector("#modale-galerie");
-clicRacineModale.addEventListener("click", fermerModale);
-
-const clicFenetreModale = document.querySelector("#fenetre-modale-galerie");
-clicFenetreModale.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-})
-
-
-function fermerModale(){
-  const modaleGalerie = document.querySelector("#modale-galerie");
-  modaleGalerie.classList.remove("modale-galerie");
-  modaleGalerie.classList.add("display-hidden");
+function fermerFenetre(idDeLaFenetre){
+  const fenetreAFermer = document.querySelector(idDeLaFenetre);
+  fenetreAFermer.className = "";
+  fenetreAFermer.classList.add("display-hidden");
+  console.log("hello");
 }
+
+let eventFermerFenetreEditionExiste = false;
+
+const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets");
+
+bouttonModifierProjets.addEventListener('click', () => {
+  const verifSiFenetreExiste = document.querySelector("#modale-galerie");
+  if(verifSiFenetreExiste == null){
+    genererFenetreEditionGalerie();
+  }
+  ouvrirFenetre("#modale-galerie", "modale-galerie");
+  
+  const croixModaleGalerie = document.querySelector("#fermer-fenetre-edition-galerie");
+  
+  if(!eventFermerFenetreEditionExiste){
+    croixModaleGalerie.addEventListener('click', () => {
+      fermerFenetre("#modale-galerie")}
+      );
+    const clicRacineFenetre = document.querySelector("#modale-galerie");
+    clicRacineFenetre.addEventListener("click", () => {
+      fermerFenetre("#modale-galerie");
+    });
+    
+    const clicFenetreModale = document.querySelector("#fenetre-edition-galerie");
+    clicFenetreModale.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    })
+    eventFermerFenetreEditionExiste = true;
+  }
+
+  const bouttonAjouterUnePhoto = document.querySelector("#boutton-ajouter-une-photo");
+  bouttonAjouterUnePhoto.addEventListener('click', () => {
+  const verifSiFenetreExiste = document.querySelector("#modale-ajout-photo");
+  if(verifSiFenetreExiste == null){
+    genererFenetreAjoutPhoto();
+    fermerFenetre("#modale-galerie");
+  }
+  ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
+});
+
+});
+
+function genererFenetreAjoutPhoto(){
+  const body = document.querySelector("body");
+  const modaleAjoutPhoto = document.createElement("aside");
+  modaleAjoutPhoto.id = "modale-ajout-photo";
+  modaleAjoutPhoto.classList.add("display-hidden");
+  const fenetreAjoutPhoto = document.createElement("div");
+  fenetreAjoutPhoto.id = "fenetre-ajout-photo";
+  fenetreAjoutPhoto.classList.add("fenetre-ajout-photo");
+  modaleAjoutPhoto.appendChild(fenetreAjoutPhoto);
+  body.appendChild(modaleAjoutPhoto);
+  const fleche = document.createElement("img");
+  fleche.id = "retour-a-fenetre-edition";
+  fleche.src = "assets/icons/fleche.svg";
+  fleche.alt = "Retour à la fenêtre d'édition";
+  const croix = document.createElement("img");
+  croix.id = "fermer-fenetre-ajout-photo";
+  croix.src = "assets/icons/croix.svg";
+  croix.alt = "Fermer la fenêtre";
+  const titreModale = document.createElement("h2");
+  titreModale.innerText = "Ajout Photo";
+  const divAjoutPhoto = document.createElement("div");
+  divAjoutPhoto.classList.add("divAjoutPhoto");
+  const imageNoPhoto = document.createElement("img");
+  imageNoPhoto.id = "image-no-photo";
+  imageNoPhoto.src = "assets/icons/placeholder-image.svg";
+  imageNoPhoto.alt = "Pas de photo";
+  const ajouterPhoto = document.createElement("button");
+  ajouterPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
+  ajouterPhoto.id = "boutton-ajouter-une-photo-fenetre-ajout-photo";
+  ajouterPhoto.innerText = "+ Ajouter photo";
+  const texteAjouterPhoto = document.createElement("p");
+  texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
+  const formAjoutPhoto = document.createElement("form");
+  formAjoutPhoto.id = "form-ajout-photo";
+  const labelTitre = document.createElement("label");
+  labelTitre.for = "titre";
+  labelTitre.innerText = "Titre";
+  const inputTitre = document.createElement("input");
+  inputTitre.type = "text";
+  inputTitre.name = "titre";
+  inputTitre.name = "titre";
+  inputTitre.required = true;
+  const labelCategorie = document.createElement("label");
+  labelCategorie.for = "categorie";
+  labelCategorie.innerText = "Catégorie";
+  const selectCategorie = document.createElement("select");
+  selectCategorie.name = "categories";
+  selectCategorie.id = "categorie-image";
+  selectCategorie.required = true;
+  const categorieObjets = document.createElement("option");
+  categorieObjets.value = "Objets";
+  categorieObjets.innerText = categorieObjets.value;
+  const categorieAppartements = document.createElement("option");
+  categorieAppartements.value = "Appartements";
+  categorieAppartements.innerText = categorieAppartements.value
+  const categorieHotelRestaurant = document.createElement("option");
+  categorieHotelRestaurant.value = "Hotels & restaurants";
+  categorieHotelRestaurant.innerText = categorieHotelRestaurant.value 
+  const bouttonValider = document.createElement("button");
+  bouttonValider.id = "boutton-valider-ajout-photo";
+  bouttonValider.classList.add("boutton-valider-ajout-photo");
+  bouttonValider.innerHTML = "Valider";
+  fenetreAjoutPhoto.appendChild(fleche);
+  fenetreAjoutPhoto.appendChild(croix);
+  fenetreAjoutPhoto.appendChild(titreModale);
+  divAjoutPhoto.appendChild(imageNoPhoto);
+  divAjoutPhoto.appendChild(ajouterPhoto);
+  divAjoutPhoto.appendChild(texteAjouterPhoto);
+  formAjoutPhoto.appendChild(labelTitre);
+  formAjoutPhoto.appendChild(inputTitre);
+  formAjoutPhoto.appendChild(labelCategorie);
+  selectCategorie.appendChild(categorieObjets);
+  selectCategorie.appendChild(categorieAppartements);
+  selectCategorie.appendChild(categorieHotelRestaurant);
+  formAjoutPhoto.appendChild(selectCategorie);
+  fenetreAjoutPhoto.appendChild(divAjoutPhoto);
+  fenetreAjoutPhoto.appendChild(formAjoutPhoto);
+  fenetreAjoutPhoto.appendChild(bouttonValider);
+
+}
+
+
+
 
