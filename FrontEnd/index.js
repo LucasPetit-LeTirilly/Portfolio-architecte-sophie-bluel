@@ -233,6 +233,7 @@ let fenetreEditionGalerieExiste = false;
 let eventFermerFenetreEditionExiste = false;
 let eventFermerFenetreAjoutPhotoExiste = false;
 let eventRetourFenetreEditionExiste = false;
+let eventValiderAjoutPhotoExiste = false;
 
 const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets");
 bouttonModifierProjets.addEventListener('click', () => {
@@ -244,13 +245,11 @@ bouttonModifierProjets.addEventListener('click', () => {
       e.addEventListener("click", () => {
         const idADelete = e.id.match(/(\d+)/);
         const realToken = JSON.stringify(tokenId.token);
-        console.log(tokenId.token);
-        console.log(realToken);
         fetch("http://localhost:5678/api/works/"+idADelete[0], {
         method: "DELETE",
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
-          'Authorization' : 'Bearer ' + tokenId.token
+          'Authorization': 'Bearer ' + tokenId.token
          }
         })
         .then(response => response.json())
@@ -279,6 +278,7 @@ bouttonModifierProjets.addEventListener('click', () => {
     })
     eventFermerFenetreEditionExiste = true;
   }
+
 
   const bouttonAjouterUnePhoto = document.querySelector("#boutton-ajouter-une-photo");
   bouttonAjouterUnePhoto.addEventListener('click', () => {
@@ -317,6 +317,20 @@ bouttonModifierProjets.addEventListener('click', () => {
         })
       eventRetourFenetreEditionExiste = true;
     }
+
+    // bloquer la validation si tous les elements (image, titre et categorie) ne sont pas remplis
+    // faire passer le boutton valider en vert si tous les element sont presents
+    // utiliser form input file pour la photo
+    // passer le boutton valider en form input submit 
+    // faire en sorte que l'image du fichier s'affiche quand on l'upload
+    const validerAjoutOeuvre = document.querySelector("#boutton-valider-ajout-photo");
+    // if(!eventValiderAjoutPhotoExiste){
+    //   validerAjoutOeuvre.addEventListener("click", () => {
+
+    //   })
+    //   eventValiderAjoutPhotoExiste = true;
+    // }
+
   });
 });
 
@@ -343,25 +357,33 @@ function genererFenetreAjoutPhoto(){
   croix.alt = "Fermer la fenêtre";
   const titreModale = document.createElement("h2");
   titreModale.innerText = "Ajout Photo";
-  const divAjoutPhoto = document.createElement("div");
-  divAjoutPhoto.classList.add("divAjoutPhoto");
-  const imageNoPhoto = document.createElement("img");
-  imageNoPhoto.id = "image-no-photo";
-  imageNoPhoto.src = "assets/icons/placeholder-image.svg";
-  imageNoPhoto.alt = "Pas de photo";
-  const ajouterPhoto = document.createElement("button");
-  ajouterPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
-  ajouterPhoto.id = "boutton-ajouter-une-photo-fenetre-ajout-photo";
-  ajouterPhoto.innerText = "+ Ajouter photo";
-  const texteAjouterPhoto = document.createElement("p");
-  texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
+  // const divAjoutPhoto = document.createElement("div");
+  // divAjoutPhoto.classList.add("divAjoutPhoto");
+  // const imageNoPhoto = document.createElement("img");
+  // imageNoPhoto.id = "image-no-photo";
+  // imageNoPhoto.src = "assets/icons/placeholder-image.svg";
+  // imageNoPhoto.alt = "Pas de photo";
+  // const ajouterPhoto = document.createElement("button");
+  // ajouterPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
+  // ajouterPhoto.id = "boutton-ajouter-une-photo-fenetre-ajout-photo";
+  // ajouterPhoto.innerText = "+ Ajouter photo";
+  // const texteAjouterPhoto = document.createElement("p");
+  // texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
   const formAjoutPhoto = document.createElement("form");
   formAjoutPhoto.id = "form-ajout-photo";
+  const ajoutPhoto = document.createElement("input");
+  ajoutPhoto.type = "file";
+  ajoutPhoto.id = "boutton-selection-photo";
+  ajoutPhoto.name = "boutton-selection-photo";
+  ajoutPhoto.accept = "image/png, image/jpg";
+  ajoutPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
+  ajoutPhoto.required = true;
   const labelTitre = document.createElement("label");
   labelTitre.for = "titre";
   labelTitre.innerText = "Titre";
   const inputTitre = document.createElement("input");
   inputTitre.type = "text";
+  inputTitre.id = "titre-oeuvre";
   inputTitre.name = "titre";
   inputTitre.name = "titre";
   inputTitre.required = true;
@@ -370,7 +392,7 @@ function genererFenetreAjoutPhoto(){
   labelCategorie.innerText = "Catégorie";
   const selectCategorie = document.createElement("select");
   selectCategorie.name = "categories";
-  selectCategorie.id = "categorie-image";
+  selectCategorie.id = "categorie-oeuvre";
   selectCategorie.required = true;
   const categorieBlank = document.createElement("option");
   categorieBlank.hidden = true;
@@ -393,9 +415,10 @@ function genererFenetreAjoutPhoto(){
   divFlecheCroix.appendChild(croix);
   fenetreAjoutPhoto.appendChild(divFlecheCroix);
   fenetreAjoutPhoto.appendChild(titreModale);
-  divAjoutPhoto.appendChild(imageNoPhoto);
-  divAjoutPhoto.appendChild(ajouterPhoto);
-  divAjoutPhoto.appendChild(texteAjouterPhoto);
+  // divAjoutPhoto.appendChild(imageNoPhoto);
+  // divAjoutPhoto.appendChild(ajouterPhoto);
+  // divAjoutPhoto.appendChild(texteAjouterPhoto);
+  formAjoutPhoto.appendChild(ajoutPhoto);
   formAjoutPhoto.appendChild(labelTitre);
   formAjoutPhoto.appendChild(inputTitre);
   formAjoutPhoto.appendChild(labelCategorie);
@@ -404,10 +427,9 @@ function genererFenetreAjoutPhoto(){
   selectCategorie.appendChild(categorieAppartements);
   selectCategorie.appendChild(categorieHotelRestaurant);
   formAjoutPhoto.appendChild(selectCategorie);
-  fenetreAjoutPhoto.appendChild(divAjoutPhoto);
+  // fenetreAjoutPhoto.appendChild(divAjoutPhoto);
   fenetreAjoutPhoto.appendChild(formAjoutPhoto);
   fenetreAjoutPhoto.appendChild(bouttonValider);
-
 }
 
 
