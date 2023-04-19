@@ -458,14 +458,12 @@ footer nav ul {
  }
 
 .divAjoutPhoto {
-	width: 66.6%;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
 	background-color: #E8F1F6;
 	border-radius: 3px;
-	margin: auto;
 }
 
 #image-no-photo {
@@ -473,10 +471,9 @@ footer nav ul {
 	height: 27.2%;
 	color: #B9C5CC;
 	margin-top: 28px;
-	margin-bottom: 21px;
 }
 
-#boutton-selection-photo {
+.label-ajout-photo {
 	font-family: 'Work Sans';
 	font-weight: 500;
 	font-size: 14px;
@@ -484,8 +481,12 @@ footer nav ul {
 	border: none;
 	background: #CBD6DC;
 	border-radius: 50px;
+	padding: 10px 33px 10px 33px;
 	margin-bottom: 7px;
-	padding: 9px 27px 9px 27px;
+}
+
+#boutton-selection-photo {	
+	display: none;
 }
 
 .divAjoutPhoto p {
@@ -501,8 +502,7 @@ footer nav ul {
 	text-align: left;
 	display: flex;
 	flex-direction: column;
-	margin: 9px auto 32px auto;
-	padding-bottom: 47px;
+	margin: 9px auto 0px auto;
 	border-bottom: 1px solid #B3B3B3;
 }
 
@@ -536,8 +536,14 @@ footer nav ul {
 	color: #444444;
 }
 
-.boutton-valider-ajout-photo{
-	width: 37.6%;
+.ligne-grise {
+	height: 1px;
+	background-color: #B3B3B3;
+	margin-top: 47px;
+}
+
+#modale-ajout-photo input[type="submit"]{
+	width: 56.4%;
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 14px;
@@ -545,8 +551,7 @@ footer nav ul {
 	background: #A7A7A7;
 	border: none;
 	border-radius: 60px;
-	padding-top: 9px;
-	padding-bottom: 9px;
+	margin-top: 32px;
 	margin-bottom: 55px;
 }
 

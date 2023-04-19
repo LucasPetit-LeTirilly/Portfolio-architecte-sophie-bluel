@@ -272,7 +272,6 @@ bouttonModifierProjets.addEventListener('click', () => {
     
     const clicFenetreModale = document.querySelector("#fenetre-edition-galerie");
     clicFenetreModale.addEventListener("click", (e) => {
-      e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
     })
@@ -285,6 +284,20 @@ bouttonModifierProjets.addEventListener('click', () => {
     const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
     if(verifSiFenetreAjoutPhotoExiste == null){
       genererFenetreAjoutPhoto();
+      // bloquer la validation si tous les elements (image, titre et categorie) ne sont pas remplis
+      // faire passer le boutton valider en vert si tous les element sont presents
+      // utiliser form input file pour la photo
+      // passer le boutton valider en form input submit 
+      // faire en sorte que l'image du fichier s'affiche quand on l'upload
+      // faire correspondre les categories a des numeros d'id
+      const validerAjoutOeuvre = document.querySelector("#boutton-valider-ajout-photo");
+      const formAjoutPhoto = document.querySelector("#form-ajout-photo")
+      validerAjoutOeuvre.addEventListener("onsubmit", (x) => {
+        x.preventDefault();
+        const dataAEnovyer = new FormData(form-ajout-photo);
+        console.log(dataAEnovyer);
+      })
+      
     }
     fermerFenetre("#modale-galerie");
     ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
@@ -302,7 +315,6 @@ bouttonModifierProjets.addEventListener('click', () => {
       
       const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
       clicFenetreModale.addEventListener("click", (e) => {
-        e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
       })
@@ -317,19 +329,6 @@ bouttonModifierProjets.addEventListener('click', () => {
         })
       eventRetourFenetreEditionExiste = true;
     }
-
-    // bloquer la validation si tous les elements (image, titre et categorie) ne sont pas remplis
-    // faire passer le boutton valider en vert si tous les element sont presents
-    // utiliser form input file pour la photo
-    // passer le boutton valider en form input submit 
-    // faire en sorte que l'image du fichier s'affiche quand on l'upload
-    const validerAjoutOeuvre = document.querySelector("#boutton-valider-ajout-photo");
-    // if(!eventValiderAjoutPhotoExiste){
-    //   validerAjoutOeuvre.addEventListener("click", () => {
-
-    //   })
-    //   eventValiderAjoutPhotoExiste = true;
-    // }
 
   });
 });
@@ -357,29 +356,30 @@ function genererFenetreAjoutPhoto(){
   croix.alt = "Fermer la fenêtre";
   const titreModale = document.createElement("h2");
   titreModale.innerText = "Ajout Photo";
-  // const divAjoutPhoto = document.createElement("div");
-  // divAjoutPhoto.classList.add("divAjoutPhoto");
-  // const imageNoPhoto = document.createElement("img");
-  // imageNoPhoto.id = "image-no-photo";
-  // imageNoPhoto.src = "assets/icons/placeholder-image.svg";
-  // imageNoPhoto.alt = "Pas de photo";
-  // const ajouterPhoto = document.createElement("button");
-  // ajouterPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
-  // ajouterPhoto.id = "boutton-ajouter-une-photo-fenetre-ajout-photo";
-  // ajouterPhoto.innerText = "+ Ajouter photo";
-  // const texteAjouterPhoto = document.createElement("p");
-  // texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
+  const divAjoutPhoto = document.createElement("div");
+  divAjoutPhoto.classList.add("divAjoutPhoto");
+  const imageNoPhoto = document.createElement("img");
+  imageNoPhoto.id = "image-no-photo";
+  imageNoPhoto.src = "assets/icons/placeholder-image.svg";
+  imageNoPhoto.alt = "Pas de photo";
+  const texteAjouterPhoto = document.createElement("p");
+  texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
   const formAjoutPhoto = document.createElement("form");
   formAjoutPhoto.id = "form-ajout-photo";
+  // formAjoutPhoto.action = "#";
+  // formAjoutPhoto.method = "post";
+  const labelAjoutPhoto = document.createElement("label");
+  labelAjoutPhoto.classList.add("label-ajout-photo");
+  labelAjoutPhoto.htmlFor = "boutton-selection-photo";
+  labelAjoutPhoto.innerText = "+ Ajout photo";
   const ajoutPhoto = document.createElement("input");
   ajoutPhoto.type = "file";
   ajoutPhoto.id = "boutton-selection-photo";
   ajoutPhoto.name = "boutton-selection-photo";
   ajoutPhoto.accept = "image/png, image/jpg";
-  ajoutPhoto.classList.add("boutton-ajouter-photo-fenetre-ajout-photo");
-  ajoutPhoto.required = true;
+  // ajoutPhoto.required = true;
   const labelTitre = document.createElement("label");
-  labelTitre.for = "titre";
+  labelTitre.htmlFor = "titre-oeuvre";
   labelTitre.innerText = "Titre";
   const inputTitre = document.createElement("input");
   inputTitre.type = "text";
@@ -388,7 +388,7 @@ function genererFenetreAjoutPhoto(){
   inputTitre.name = "titre";
   inputTitre.required = true;
   const labelCategorie = document.createElement("label");
-  labelCategorie.for = "categorie";
+  labelCategorie.htmlFor = "categorie-oeuvre";
   labelCategorie.innerText = "Catégorie";
   const selectCategorie = document.createElement("select");
   selectCategorie.name = "categories";
@@ -403,22 +403,25 @@ function genererFenetreAjoutPhoto(){
   categorieObjets.innerText = categorieObjets.value;
   const categorieAppartements = document.createElement("option");
   categorieAppartements.value = "Appartements";
-  categorieAppartements.innerText = categorieAppartements.value
+  categorieAppartements.innerText = categorieAppartements.value;
   const categorieHotelRestaurant = document.createElement("option");
   categorieHotelRestaurant.value = "Hotels & restaurants";
-  categorieHotelRestaurant.innerText = categorieHotelRestaurant.value 
-  const bouttonValider = document.createElement("button");
+  categorieHotelRestaurant.innerText = categorieHotelRestaurant.value;
+  const ligneGrise = document.createElement("div");
+  ligneGrise.classList.add("ligne-grise");
+  const bouttonValider = document.createElement("input");
+  bouttonValider.type = "submit";
   bouttonValider.id = "boutton-valider-ajout-photo";
-  bouttonValider.classList.add("boutton-valider-ajout-photo");
-  bouttonValider.innerHTML = "Valider";
+  bouttonValider.value = "Valider";
   divFlecheCroix.appendChild(fleche);
   divFlecheCroix.appendChild(croix);
   fenetreAjoutPhoto.appendChild(divFlecheCroix);
   fenetreAjoutPhoto.appendChild(titreModale);
-  // divAjoutPhoto.appendChild(imageNoPhoto);
-  // divAjoutPhoto.appendChild(ajouterPhoto);
-  // divAjoutPhoto.appendChild(texteAjouterPhoto);
-  formAjoutPhoto.appendChild(ajoutPhoto);
+  divAjoutPhoto.appendChild(imageNoPhoto);
+  divAjoutPhoto.appendChild(labelAjoutPhoto);
+  divAjoutPhoto.appendChild(ajoutPhoto);
+  divAjoutPhoto.appendChild(texteAjouterPhoto);
+  formAjoutPhoto.appendChild(divAjoutPhoto);
   formAjoutPhoto.appendChild(labelTitre);
   formAjoutPhoto.appendChild(inputTitre);
   formAjoutPhoto.appendChild(labelCategorie);
@@ -427,11 +430,8 @@ function genererFenetreAjoutPhoto(){
   selectCategorie.appendChild(categorieAppartements);
   selectCategorie.appendChild(categorieHotelRestaurant);
   formAjoutPhoto.appendChild(selectCategorie);
-  // fenetreAjoutPhoto.appendChild(divAjoutPhoto);
+  formAjoutPhoto.appendChild(ligneGrise);
+  formAjoutPhoto.appendChild(bouttonValider);
   fenetreAjoutPhoto.appendChild(formAjoutPhoto);
-  fenetreAjoutPhoto.appendChild(bouttonValider);
 }
-
-
-
 
