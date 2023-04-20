@@ -25,31 +25,31 @@ genererOeuvres(oeuvres)
 
 
 
-function genererBouttons(typeCategorie){
-  const ensembleBouttons = document.querySelector(".section-filtre");
+function genererBoutons(typeCategorie){
+  const ensembleBoutons = document.querySelector(".section-filtre");
   const bouttonTous = document.createElement('button');
   bouttonTous.dataset.id = 0;
   bouttonTous.innerText = "Tous";
   bouttonTous.classList.add('filtre-clique');
-  ensembleBouttons.appendChild(bouttonTous);
+  ensembleBoutons.appendChild(bouttonTous);
   for (let i = 0; i < typeCategorie.length; i++){
     const filtre = typeCategorie[i];
     const bouttonElement = document.createElement("button");
     bouttonElement.dataset.id = filtre.id;
     bouttonElement.innerText = filtre.name;
     bouttonElement.classList.add('filtre-non-clique');
-    ensembleBouttons.appendChild(bouttonElement);
+    ensembleBoutons.appendChild(bouttonElement);
   }
 }
 
-genererBouttons(categoriesParDefaut)
+genererBoutons(categoriesParDefaut)
 
 
-const tousLesBouttons = document.querySelectorAll('.section-filtre button');
+const tousLesBoutons = document.querySelectorAll('.section-filtre button');
 
-tousLesBouttons.forEach((ceBoutton) => ceBoutton.addEventListener('click', (e) => {
-  tousLesBouttons.forEach((x) => x.classList.remove('filtre-clique'));
-  tousLesBouttons.forEach((x) => x.classList.add('filtre-non-clique'));
+tousLesBoutons.forEach((ceBoutton) => ceBoutton.addEventListener('click', (e) => {
+  tousLesBoutons.forEach((x) => x.classList.remove('filtre-clique'));
+  tousLesBoutons.forEach((x) => x.classList.add('filtre-non-clique'));
   e.target.classList.remove('filtre-non-clique');
   e.target.classList.add('filtre-clique');
   if (e.target.dataset.id == 0){
@@ -242,16 +242,16 @@ bouttonModifierProjets.addEventListener('click', () => {
     genererFenetreEditionGalerie();
     const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
     tousLogosCorbeille.forEach((e) => {
-      e.addEventListener("click", () => {
+      e.addEventListener("click", (x) => {
+        x.preventDefault();
         const idADelete = e.id.match(/(\d+)/);
         fetch("http://localhost:5678/api/works/"+idADelete[0], {
         method: "DELETE",
         headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+          // 'Content-type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ' + tokenId.token
          }
         })
-        .then(response => response.json())
         .then(response => console.log(response))
       })
     })
@@ -284,46 +284,47 @@ bouttonModifierProjets.addEventListener('click', () => {
     if(verifSiFenetreAjoutPhotoExiste == null){
       genererFenetreAjoutPhoto();
 
-      // faire passer le boutton valider en vert si tous les element sont presents
+
 
 
       // faire en sorte que l'image du fichier s'affiche quand on l'upload
 
    
       const formAjoutPhoto = document.querySelector("#form-ajout-photo")
-      
+      const imageChoisie = document.querySelector("#boutton-selection-photo")
+      const titreChoisi = document.querySelector("#titre-oeuvre")
+      const categorieChoisie = document.querySelector("#categorie-oeuvre");
       formAjoutPhoto.addEventListener("submit", (e) => {
         e.preventDefault();
-        const imageChoisie = document.querySelector("#boutton-selection-photo")
-        const titreChoisi = document.querySelector("#titre-oeuvre")
-        const categorieChoisie = document.querySelector("#categorie-oeuvre");
-        let conversionCategorie = categorieChoisie.value
-        for (let i = 0; i < categoriesParDefaut.length; i++){
-          const rechercheCategorie = categoriesParDefaut[i];
-          if (conversionCategorie === rechercheCategorie.name){
-            conversionCategorie = Number(rechercheCategorie.id);
+        const tailleImage = imageChoisie.files[0].size / 1024 / 1024;
+        if (imageChoisie.files[0].name != undefined && tailleImage <= 4){
+          let conversionCategorie = categorieChoisie.value
+          for (let i = 0; i < categoriesParDefaut.length; i++){
+            const rechercheCategorie = categoriesParDefaut[i];
+            if (conversionCategorie === rechercheCategorie.name){
+              conversionCategorie = Number(rechercheCategorie.id);
+            }
           }
-        }
-        let dataAEnvoyer = new FormData();
-        dataAEnvoyer.append("image", imageChoisie.files[0].name);
-        dataAEnvoyer.append("title", titreChoisi.value);
-        dataAEnvoyer.append("category", conversionCategorie);
+          let dataAEnvoyer = new FormData();
+          dataAEnvoyer.append("image", imageChoisie.files[0]);
+          dataAEnvoyer.append("title", titreChoisi.value);
+          dataAEnvoyer.append("category", conversionCategorie);
 
-        
-        
-        
-        console.log(...dataAEnvoyer)
-        fetch("http://localhost:5678/api/works", {
-          method: "POST",
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-            'Authorization': 'Bearer ' + tokenId.token
-          },
-          body: dataAEnvoyer
-        })
-        .then(response => console.log(response));
+          fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+              'Authorization': 'Bearer ' + tokenId.token
+            },
+            body: dataAEnvoyer
+          })
+          .then(response => console.log(response));
+        }
+        else{
+          alert("Veuillez choisir une image de 4mo maximum");
+        }
       })
-      
+        // faire passer le boutton valider en vert si tous les element sont presents
+        
     }
     fermerFenetre("#modale-galerie");
     ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
@@ -392,8 +393,6 @@ function genererFenetreAjoutPhoto(){
   texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
   const formAjoutPhoto = document.createElement("form");
   formAjoutPhoto.id = "form-ajout-photo";
-  // formAjoutPhoto.action = "#";
-  // formAjoutPhoto.method = "post";
   const labelAjoutPhoto = document.createElement("label");
   labelAjoutPhoto.classList.add("label-ajout-photo");
   labelAjoutPhoto.htmlFor = "boutton-selection-photo";
@@ -403,7 +402,6 @@ function genererFenetreAjoutPhoto(){
   ajoutPhoto.id = "boutton-selection-photo";
   ajoutPhoto.name = "image";
   ajoutPhoto.accept = "image/png, image/jpg";
-  ajoutPhoto.required = true;
   const labelTitre = document.createElement("label");
   labelTitre.htmlFor = "titre-oeuvre";
   labelTitre.innerText = "Titre";
