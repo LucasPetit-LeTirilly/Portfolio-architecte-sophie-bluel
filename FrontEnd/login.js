@@ -11,10 +11,10 @@ form.addEventListener('submit', (x) => {
   
   fetch('http://localhost:5678/api/users/login', {
     method: "POST",
-    body: JSON.stringify(donneesLogin),
     headers: {
       "Content-Type": "application/json"
-    }
+    },
+    body: JSON.stringify(donneesLogin),
   })
   .then(reponse => {
     if (reponse.status === 200) {

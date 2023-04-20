@@ -244,7 +244,6 @@ bouttonModifierProjets.addEventListener('click', () => {
     tousLogosCorbeille.forEach((e) => {
       e.addEventListener("click", () => {
         const idADelete = e.id.match(/(\d+)/);
-        const realToken = JSON.stringify(tokenId.token);
         fetch("http://localhost:5678/api/works/"+idADelete[0], {
         method: "DELETE",
         headers: {
@@ -284,18 +283,45 @@ bouttonModifierProjets.addEventListener('click', () => {
     const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
     if(verifSiFenetreAjoutPhotoExiste == null){
       genererFenetreAjoutPhoto();
-      // bloquer la validation si tous les elements (image, titre et categorie) ne sont pas remplis
+
       // faire passer le boutton valider en vert si tous les element sont presents
-      // utiliser form input file pour la photo
-      // passer le boutton valider en form input submit 
+
+
       // faire en sorte que l'image du fichier s'affiche quand on l'upload
-      // faire correspondre les categories a des numeros d'id
-      const validerAjoutOeuvre = document.querySelector("#boutton-valider-ajout-photo");
+
+   
       const formAjoutPhoto = document.querySelector("#form-ajout-photo")
-      validerAjoutOeuvre.addEventListener("onsubmit", (x) => {
-        x.preventDefault();
-        const dataAEnovyer = new FormData(form-ajout-photo);
-        console.log(dataAEnovyer);
+      
+      formAjoutPhoto.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const imageChoisie = document.querySelector("#boutton-selection-photo")
+        const titreChoisi = document.querySelector("#titre-oeuvre")
+        const categorieChoisie = document.querySelector("#categorie-oeuvre");
+        let conversionCategorie = categorieChoisie.value
+        for (let i = 0; i < categoriesParDefaut.length; i++){
+          const rechercheCategorie = categoriesParDefaut[i];
+          if (conversionCategorie === rechercheCategorie.name){
+            conversionCategorie = Number(rechercheCategorie.id);
+          }
+        }
+        let dataAEnvoyer = new FormData();
+        dataAEnvoyer.append("image", imageChoisie.files[0].name);
+        dataAEnvoyer.append("title", titreChoisi.value);
+        dataAEnvoyer.append("category", conversionCategorie);
+
+        
+        
+        
+        console.log(...dataAEnvoyer)
+        fetch("http://localhost:5678/api/works", {
+          method: "POST",
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ' + tokenId.token
+          },
+          body: dataAEnvoyer
+        })
+        .then(response => console.log(response));
       })
       
     }
@@ -375,23 +401,22 @@ function genererFenetreAjoutPhoto(){
   const ajoutPhoto = document.createElement("input");
   ajoutPhoto.type = "file";
   ajoutPhoto.id = "boutton-selection-photo";
-  ajoutPhoto.name = "boutton-selection-photo";
+  ajoutPhoto.name = "image";
   ajoutPhoto.accept = "image/png, image/jpg";
-  // ajoutPhoto.required = true;
+  ajoutPhoto.required = true;
   const labelTitre = document.createElement("label");
   labelTitre.htmlFor = "titre-oeuvre";
   labelTitre.innerText = "Titre";
   const inputTitre = document.createElement("input");
   inputTitre.type = "text";
   inputTitre.id = "titre-oeuvre";
-  inputTitre.name = "titre";
-  inputTitre.name = "titre";
+  inputTitre.name = "title";
   inputTitre.required = true;
   const labelCategorie = document.createElement("label");
   labelCategorie.htmlFor = "categorie-oeuvre";
   labelCategorie.innerText = "Catégorie";
   const selectCategorie = document.createElement("select");
-  selectCategorie.name = "categories";
+  selectCategorie.name = "category";
   selectCategorie.id = "categorie-oeuvre";
   selectCategorie.required = true;
   const categorieBlank = document.createElement("option");
