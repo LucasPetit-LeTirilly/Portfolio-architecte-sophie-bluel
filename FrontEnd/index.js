@@ -1,7 +1,10 @@
-const reponseOeuvres = await fetch('http://localhost:5678/api/works');
-const oeuvres = await reponseOeuvres.json();
-const reponseCategories = await fetch('http://localhost:5678/api/categories');
-const categoriesParDefaut = await reponseCategories.json();
+
+// A les fetchs des data a mettre sous forme de fonction pour les reappeller dans les fonctions qui edit les oeuvres presentent
+
+let reponseOeuvres = await fetch('http://localhost:5678/api/works');
+let oeuvres = await reponseOeuvres.json();
+let reponseCategories = await fetch('http://localhost:5678/api/categories');
+let categoriesParDefaut = await reponseCategories.json();
 
 
 function genererOeuvres(figure){
@@ -141,7 +144,7 @@ if (tokenId.token !== null && "undefined") {
 }
 
 
-function genererFenetreEditionGalerie(){
+function genererFenetreEditionGalerie(oeuvres){
   const body = document.querySelector("body");
   const modaleEditionGalerie = document.createElement("aside");
   modaleEditionGalerie.id = "modale-galerie";
@@ -239,7 +242,7 @@ const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets
 bouttonModifierProjets.addEventListener('click', () => {
   const verifSiFenetreEditionExiste = document.querySelector("#modale-galerie");
   if(verifSiFenetreEditionExiste == null){
-    genererFenetreEditionGalerie();
+    genererFenetreEditionGalerie(oeuvres);
     const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
     tousLogosCorbeille.forEach((e) => {
       e.addEventListener("click", (x) => {
@@ -248,7 +251,6 @@ bouttonModifierProjets.addEventListener('click', () => {
         fetch("http://localhost:5678/api/works/"+idADelete[0], {
         method: "DELETE",
         headers: {
-          // 'Content-type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ' + tokenId.token
          }
         })
@@ -317,7 +319,22 @@ bouttonModifierProjets.addEventListener('click', () => {
             },
             body: dataAEnvoyer
           })
-          .then(response => console.log(response));
+          // .then(() => {
+          //   reponseOeuvres = fetch('http://localhost:5678/api/works')
+          //   .then((oeuvres) => {
+          //     return oeuvres = reponseOeuvres.json()}
+          //     )
+            // reponseCategories = fetch('http://localhost:5678/api/categories');
+            // categoriesParDefaut = reponseCategories.json(); 
+            // })
+          .then(() => {
+            console.log("hello");
+            fermerFenetre("#modale-ajout-photo");
+            const selectionModaleGalerie = document.querySelector("#modale-galerie");
+            selectionModaleGalerie.remove();
+            genererFenetreEditionGalerie(oeuvres);
+            ouvrirFenetre("#modale-galerie", "modale-galerie");
+          })
         }
         else{
           alert("Veuillez choisir une image de 4mo maximum");
