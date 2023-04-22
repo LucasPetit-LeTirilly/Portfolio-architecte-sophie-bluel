@@ -522,7 +522,7 @@ footer nav ul {
 	margin: 21px 0 1em 0;
 }
 
-.fenetre-ajout-photo form input {
+.fenetre-ajout-photo form input[type=text] {
 	height: 50px;
 	font-family: 'Work Sans';
 	font-weight: 400;
@@ -556,6 +556,7 @@ footer nav ul {
 }
 
 .boutton-valider-gris{
+	text-align: center;
 	width: 56.4%;
 	font-family: 'Syne';
 	font-weight: 700;
@@ -564,7 +565,7 @@ footer nav ul {
 	background-color: #A7A7A7;
 	border: none;
 	border-radius: 60px;
-	margin: 32px auto 55px auto;
+	padding: 9px 0px 9px 0px;
 	margin-top: 32px;
 	margin-bottom: 55px;
 	margin-right: auto;
@@ -581,6 +582,7 @@ footer nav ul {
 	background: #1D6154;
 	border: none;
 	border-radius: 60px;
+	padding: 9px 0px 9px 0px;
 	margin-top: 32px;
 	margin-bottom: 55px;
 	margin-right: auto;

@@ -482,6 +482,8 @@ function genererFenetreAjoutPhoto(){
     ajoutPhoto.click();
   });
 
+  // Le bouton valider s'affiche mal, confil
+
   inputTitre.addEventListener("input", () => {
     submitPossible(ajoutPhoto.files[0].name,inputTitre,selectCategorie,bouttonValider);
     if(inputTitre.value == ""){
