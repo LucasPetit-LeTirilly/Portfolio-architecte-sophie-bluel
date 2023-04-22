@@ -1,3 +1,5 @@
+// boutton s'ecrit bouton 
+
 
 let reponseOeuvres
 let oeuvres
@@ -144,7 +146,10 @@ function genererEditMode() {
   const sectionFiltre = document.querySelector(".section-filtre");
   sectionFiltre.classList.add('display-hidden');
 }
-
+//  regler cette erreur: dex.js:148 Uncaught TypeError: Cannot read properties of null (reading 'token')
+    // at index.js:148:13
+    // (
+      // cette erreur s'affiche quand on load la page sans etre connecte
 if (tokenId.token !== null && "undefined") {
   genererEditMode();
 }
@@ -235,12 +240,6 @@ async function genererFenetreEditionGalerie(travaux){
     const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
     if(verifSiFenetreAjoutPhotoExiste == null){
       genererFenetreAjoutPhoto();
-
-
-
-
-      
-        // faire passer le boutton valider en vert si tous les element sont presents
         
     }
     fermerFenetre("#modale-galerie");
@@ -351,6 +350,14 @@ bouttonModifierProjets.addEventListener('click', () => {
   
 });
 
+function submitPossible(image,titre,categorie,boutton){
+  if(image != undefined && titre.value != ""
+    && categorie.value != ""){
+      boutton.classList.remove("boutton-valider-gris")
+      boutton.classList.add("boutton-valider-vert");
+    }
+
+}
 
 function genererFenetreAjoutPhoto(){
   const body = document.querySelector("body");
@@ -378,16 +385,21 @@ function genererFenetreAjoutPhoto(){
   divAjoutPhoto.classList.add("div-ajout-photo");
   const imageNoPhoto = document.createElement("img");
   imageNoPhoto.id = "image-no-photo";
+  imageNoPhoto.classList.add("image-no-photo");
   imageNoPhoto.src = "assets/icons/placeholder-image.svg";
   imageNoPhoto.alt = "Pas de photo";
   const texteAjouterPhoto = document.createElement("p");
+  texteAjouterPhoto.id = "texte-ajouter-photo";
+  texteAjouterPhoto.classList.add("texte-ajouter-photo");
   texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
-  const previewPhoto = document.createElement("div");
+  const previewPhoto = document.createElement("img");
   previewPhoto.id = "preview-photo";
+  previewPhoto.alt ="Previsualisation de l'image";
   previewPhoto.classList.add("display-hidden");
   const formAjoutPhoto = document.createElement("form");
   formAjoutPhoto.id = "form-ajout-photo";
   const labelAjoutPhoto = document.createElement("label");
+  labelAjoutPhoto.id = "label-ajout-photo";
   labelAjoutPhoto.classList.add("label-ajout-photo");
   labelAjoutPhoto.htmlFor = "boutton-selection-photo";
   labelAjoutPhoto.innerText = "+ Ajout photo";
@@ -429,6 +441,7 @@ function genererFenetreAjoutPhoto(){
   const bouttonValider = document.createElement("input");
   bouttonValider.type = "submit";
   bouttonValider.id = "boutton-valider-ajout-photo";
+  bouttonValider.classList.add("boutton-valider-gris");
   bouttonValider.value = "Valider";
   divFlecheCroix.appendChild(fleche);
   divFlecheCroix.appendChild(croix);
@@ -452,24 +465,41 @@ function genererFenetreAjoutPhoto(){
   formAjoutPhoto.appendChild(bouttonValider);
   fenetreAjoutPhoto.appendChild(formAjoutPhoto);
 
+
   // A mettre sous forme de fonction
 
-   
-  const selectionformAjoutPhoto = document.querySelector("#form-ajout-photo")
-  const imageChoisie = document.querySelector("#boutton-selection-photo") 
-  // Faire le css de preview photo et faire en sorte de charger la photo dans la preview
-  imageChoisie.addEventListener("input", () => {
+
+  ajoutPhoto.addEventListener("input", () => {
+    fermerFenetre("#image-no-photo");
+    fermerFenetre("#texte-ajouter-photo");
+    fermerFenetre(".label-ajout-photo");
+
+    previewPhoto.src = URL.createObjectURL(ajoutPhoto.files[0]);
     ouvrirFenetre("#preview-photo", "preview-photo");
-  })
+    submitPossible(ajoutPhoto.files[0].name,inputTitre,selectCategorie,bouttonValider);
+  });
   previewPhoto.addEventListener("click", () => {
     ajoutPhoto.click();
-  })
+  });
+
+  inputTitre.addEventListener("input", () => {
+    submitPossible(ajoutPhoto.files[0].name,inputTitre,selectCategorie,bouttonValider);
+    if(inputTitre.value == ""){
+      bouttonValider.classList.remove("boutton-valider-vert");
+      bouttonValider.classList.add("boutton-valider-gris");
+    }
+  });
+
+  selectCategorie.addEventListener("input", () => {
+    submitPossible(ajoutPhoto.files[0].name,inputTitre,selectCategorie,bouttonValider);
+  });           
+
   const titreChoisi = document.querySelector("#titre-oeuvre")
   const categorieChoisie = document.querySelector("#categorie-oeuvre");
-  selectionformAjoutPhoto.addEventListener("submit", (e) => {
+  formAjoutPhoto.addEventListener("submit", (e) => {
     e.preventDefault();
-    const tailleImage = imageChoisie.files[0].size / 1024 / 1024;
-    if (imageChoisie.files[0].name != undefined && tailleImage <= 4){
+    const tailleImage = ajoutPhoto.files[0].size / 1024 / 1024;
+    if (ajoutPhoto.files[0].name != undefined && tailleImage <= 4){
       let conversionCategorie = categorieChoisie.value
       for (let i = 0; i < categoriesParDefaut.length; i++){
         const rechercheCategorie = categoriesParDefaut[i];
@@ -478,7 +508,7 @@ function genererFenetreAjoutPhoto(){
         }
       }
       let dataAEnvoyer = new FormData();
-      dataAEnvoyer.append("image", imageChoisie.files[0]);
+      dataAEnvoyer.append("image", ajoutPhoto.files[0]);
       dataAEnvoyer.append("title", titreChoisi.value);
       dataAEnvoyer.append("category", conversionCategorie);
 
@@ -501,9 +531,15 @@ function genererFenetreAjoutPhoto(){
         selectionModaleGalerie.remove();
         genererFenetreEditionGalerie(oeuvres);
         ouvrirFenetre("#modale-galerie", "modale-galerie");
-        imageChoisie.files = null;
+        ajoutPhoto.files = null;
+        fermerFenetre("#preview-photo");
         titreChoisi.value = "";
         categorieChoisie.value = "";
+        ouvrirFenetre("#image-no-photo","image-no-photo");
+        ouvrirFenetre("#texte-ajouter-photo","texte-ajouter-photo");
+        labelAjoutPhoto.classList.remove("display-hidden");
+        labelAjoutPhoto.classList.add("label-ajout-photo");
+        alert("L'image a bien été envoyée");
       })
     }
     else{

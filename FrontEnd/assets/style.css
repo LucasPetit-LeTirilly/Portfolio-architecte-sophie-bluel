@@ -208,7 +208,7 @@ li:hover {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+.envoyer-form-contact{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -460,6 +460,7 @@ footer nav ul {
  }
 
 .div-ajout-photo {
+	max-height: 169px;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -468,7 +469,14 @@ footer nav ul {
 	border-radius: 3px;
 }
 
-#image-no-photo {
+#preview-photo {
+	max-height: 169px;
+	object-fit: contain;
+	width: 100%;
+	height: 100%;
+}
+
+.image-no-photo {
 	width: 13.8%;
 	height: 27.2%;
 	color: #B9C5CC;
@@ -491,18 +499,12 @@ footer nav ul {
 	display: none;
 }
 
-.div-ajout-photo p {
+.texte-ajouter-photo {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 10px;
 	color: #444444;
 	margin-bottom: 19px;
-}
-
-.preview-photo {
-	background-color: black;
-	width: 200px;
-	height: 200px;
 }
 
 .fenetre-ajout-photo form {
@@ -550,17 +552,36 @@ footer nav ul {
 	margin-top: 47px;
 }
 
-#modale-ajout-photo input[type="submit"]{
+.boutton-valider-gris{
 	width: 56.4%;
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 14px;
 	color: #FFFFFF;
-	background: #A7A7A7;
+	background-color: #A7A7A7;
+	border: none;
+	border-radius: 60px;
+	margin: 32px auto 55px auto;
+	margin-top: 32px;
+	margin-bottom: 55px;
+	margin-right: auto;
+	margin-left: auto;
+	
+}
+
+.boutton-valider-vert{
+	width: 56.4%;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	color: #FFFFFF;
+	background: #1D6154;
 	border: none;
 	border-radius: 60px;
 	margin-top: 32px;
 	margin-bottom: 55px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 /* Styles de la page de login */
@@ -605,7 +626,7 @@ footer nav ul {
 	display: block;
 }
 
-#login input[type="submit"]{
+.se-connecter{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 0.875em;
