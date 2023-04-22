@@ -1,11 +1,17 @@
 
-// A les fetchs des data a mettre sous forme de fonction pour les reappeller dans les fonctions qui edit les oeuvres presentent
+let reponseOeuvres
+let oeuvres
+let reponseCategories
+let categoriesParDefaut
 
-let reponseOeuvres = await fetch('http://localhost:5678/api/works');
-let oeuvres = await reponseOeuvres.json();
-let reponseCategories = await fetch('http://localhost:5678/api/categories');
-let categoriesParDefaut = await reponseCategories.json();
+async function recuperationDonnees(){
+  reponseOeuvres = await fetch('http://localhost:5678/api/works');
+  oeuvres = await reponseOeuvres.json();
+  reponseCategories = await fetch('http://localhost:5678/api/categories');
+  categoriesParDefaut = await reponseCategories.json();
+}
 
+await recuperationDonnees();
 
 function genererOeuvres(figure){
   const galerie = document.querySelector(".gallery");
@@ -144,7 +150,7 @@ if (tokenId.token !== null && "undefined") {
 }
 
 
-function genererFenetreEditionGalerie(oeuvres){
+async function genererFenetreEditionGalerie(travaux){
   const body = document.querySelector("body");
   const modaleEditionGalerie = document.createElement("aside");
   modaleEditionGalerie.id = "modale-galerie";
@@ -171,10 +177,105 @@ function genererFenetreEditionGalerie(oeuvres){
   supprimerLaGalerie.innerText = "Supprimer la galerie";
   fenetreEditionGalerie.appendChild(croix);
   fenetreEditionGalerie.appendChild(titreModale);
-  genererMiniGalerie(oeuvres);
+  genererMiniGalerie(travaux);
   fenetreEditionGalerie.appendChild(ajouterUnePhoto);
   fenetreEditionGalerie.appendChild(breakLine);
   fenetreEditionGalerie.appendChild(supprimerLaGalerie);
+  
+  // A mettre sous forme fonction de delete
+
+  const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
+    tousLogosCorbeille.forEach((e) => {
+      e.addEventListener("click", (x) => {
+        x.preventDefault();
+        const idADelete = e.id.match(/(\d+)/);
+        fetch("http://localhost:5678/api/works/"+idADelete[0], {
+        method: "DELETE",
+        headers: {
+          'Authorization': 'Bearer ' + tokenId.token
+         }
+        })
+        .then(() => {
+          return recuperationDonnees();
+        })
+        .then(() => {
+          const selectionGalerie = document.querySelector(".gallery")
+          selectionGalerie.innerHTML = ""
+          genererOeuvres(oeuvres);
+          const selectionModaleGalerie = document.querySelector("#modale-galerie");
+          selectionModaleGalerie.remove();
+          genererFenetreEditionGalerie(oeuvres);
+          ouvrirFenetre("#modale-galerie", "modale-galerie");
+        })
+      })
+    })
+  
+  // A mettre sous forme fonction de generer boutton modale edition
+  const croixModaleGalerie = document.querySelector("#fermer-fenetre-edition-galerie");
+  
+  
+  croixModaleGalerie.addEventListener('click', () => {
+    fermerFenetre("#modale-galerie")}
+    );
+  const clicRacineFenetre = document.querySelector("#modale-galerie");
+  clicRacineFenetre.addEventListener("click", () => {
+    fermerFenetre("#modale-galerie");
+  });
+  
+  const clicFenetreModale = document.querySelector("#fenetre-edition-galerie");
+  clicFenetreModale.addEventListener("click", (e) => {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+  })
+
+  // A mettre sous forme de fonction generer bouton ajout photo
+  
+  const bouttonAjouterUnePhoto = document.querySelector("#boutton-ajouter-une-photo");
+  bouttonAjouterUnePhoto.addEventListener('click', () => {
+    const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
+    if(verifSiFenetreAjoutPhotoExiste == null){
+      genererFenetreAjoutPhoto();
+
+
+
+
+      
+        // faire passer le boutton valider en vert si tous les element sont presents
+        
+    }
+    fermerFenetre("#modale-galerie");
+    ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
+
+    const croixFenetreAjoutPhoto = document.querySelector("#fermer-fenetre-ajout-photo");
+
+    if(!eventFermerFenetreAjoutPhotoExiste){
+      croixFenetreAjoutPhoto.addEventListener('click', () => {
+        fermerFenetre("#modale-ajout-photo")}
+        );
+      const clicRacineFenetre = document.querySelector("#modale-ajout-photo");
+      clicRacineFenetre.addEventListener("click", () => {
+        fermerFenetre("#modale-ajout-photo");
+      });
+      
+      const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
+      clicFenetreModale.addEventListener("click", (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      })
+      eventFermerFenetreAjoutPhotoExiste = true;
+    }
+
+    const flecheFenetreAjoutPhoto = document.querySelector("#retour-a-fenetre-edition");
+    if(!eventRetourFenetreEditionExiste){
+      flecheFenetreAjoutPhoto.addEventListener("click", () => {
+        fermerFenetre("#modale-ajout-photo");
+        ouvrirFenetre("#modale-galerie", "modale-galerie");
+        })
+      eventRetourFenetreEditionExiste = true;
+    }
+
+  });
+
 }
 
 function genererMiniGalerie(article){
@@ -218,6 +319,8 @@ function genererMiniGalerie(article){
 } 
 
 
+// Renommer ouvrir et fermer fenetre en ouvrir et fermer div
+
 function ouvrirFenetre(idDeLaFenetre, classeDeLaFenetre){
   const fenetreAOuvrir = document.querySelector(idDeLaFenetre);
   if (fenetreAOuvrir.classList.contains("display-hidden")){
@@ -243,138 +346,9 @@ bouttonModifierProjets.addEventListener('click', () => {
   const verifSiFenetreEditionExiste = document.querySelector("#modale-galerie");
   if(verifSiFenetreEditionExiste == null){
     genererFenetreEditionGalerie(oeuvres);
-    const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
-    tousLogosCorbeille.forEach((e) => {
-      e.addEventListener("click", (x) => {
-        x.preventDefault();
-        const idADelete = e.id.match(/(\d+)/);
-        fetch("http://localhost:5678/api/works/"+idADelete[0], {
-        method: "DELETE",
-        headers: {
-          'Authorization': 'Bearer ' + tokenId.token
-         }
-        })
-        .then(response => console.log(response))
-      })
-    })
   }
   ouvrirFenetre("#modale-galerie", "modale-galerie");
   
-  const croixModaleGalerie = document.querySelector("#fermer-fenetre-edition-galerie");
-  
-  if(!eventFermerFenetreEditionExiste){
-    croixModaleGalerie.addEventListener('click', () => {
-      fermerFenetre("#modale-galerie")}
-      );
-    const clicRacineFenetre = document.querySelector("#modale-galerie");
-    clicRacineFenetre.addEventListener("click", () => {
-      fermerFenetre("#modale-galerie");
-    });
-    
-    const clicFenetreModale = document.querySelector("#fenetre-edition-galerie");
-    clicFenetreModale.addEventListener("click", (e) => {
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    })
-    eventFermerFenetreEditionExiste = true;
-  }
-
-
-  const bouttonAjouterUnePhoto = document.querySelector("#boutton-ajouter-une-photo");
-  bouttonAjouterUnePhoto.addEventListener('click', () => {
-    const verifSiFenetreAjoutPhotoExiste = document.querySelector("#modale-ajout-photo");
-    if(verifSiFenetreAjoutPhotoExiste == null){
-      genererFenetreAjoutPhoto();
-
-
-
-
-      // faire en sorte que l'image du fichier s'affiche quand on l'upload
-
-   
-      const formAjoutPhoto = document.querySelector("#form-ajout-photo")
-      const imageChoisie = document.querySelector("#boutton-selection-photo")
-      const titreChoisi = document.querySelector("#titre-oeuvre")
-      const categorieChoisie = document.querySelector("#categorie-oeuvre");
-      formAjoutPhoto.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const tailleImage = imageChoisie.files[0].size / 1024 / 1024;
-        if (imageChoisie.files[0].name != undefined && tailleImage <= 4){
-          let conversionCategorie = categorieChoisie.value
-          for (let i = 0; i < categoriesParDefaut.length; i++){
-            const rechercheCategorie = categoriesParDefaut[i];
-            if (conversionCategorie === rechercheCategorie.name){
-              conversionCategorie = Number(rechercheCategorie.id);
-            }
-          }
-          let dataAEnvoyer = new FormData();
-          dataAEnvoyer.append("image", imageChoisie.files[0]);
-          dataAEnvoyer.append("title", titreChoisi.value);
-          dataAEnvoyer.append("category", conversionCategorie);
-
-          fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-              'Authorization': 'Bearer ' + tokenId.token
-            },
-            body: dataAEnvoyer
-          })
-          // .then(() => {
-          //   reponseOeuvres = fetch('http://localhost:5678/api/works')
-          //   .then((oeuvres) => {
-          //     return oeuvres = reponseOeuvres.json()}
-          //     )
-            // reponseCategories = fetch('http://localhost:5678/api/categories');
-            // categoriesParDefaut = reponseCategories.json(); 
-            // })
-          .then(() => {
-            console.log("hello");
-            fermerFenetre("#modale-ajout-photo");
-            const selectionModaleGalerie = document.querySelector("#modale-galerie");
-            selectionModaleGalerie.remove();
-            genererFenetreEditionGalerie(oeuvres);
-            ouvrirFenetre("#modale-galerie", "modale-galerie");
-          })
-        }
-        else{
-          alert("Veuillez choisir une image de 4mo maximum");
-        }
-      })
-        // faire passer le boutton valider en vert si tous les element sont presents
-        
-    }
-    fermerFenetre("#modale-galerie");
-    ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
-
-    const croixFenetreAjoutPhoto = document.querySelector("#fermer-fenetre-ajout-photo");
-
-    if(!eventFermerFenetreAjoutPhotoExiste){
-      croixFenetreAjoutPhoto.addEventListener('click', () => {
-        fermerFenetre("#modale-ajout-photo")}
-        );
-      const clicRacineFenetre = document.querySelector("#modale-ajout-photo");
-      clicRacineFenetre.addEventListener("click", () => {
-        fermerFenetre("#modale-ajout-photo");
-      });
-      
-      const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
-      clicFenetreModale.addEventListener("click", (e) => {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      })
-      eventFermerFenetreAjoutPhotoExiste = true;
-    }
-
-    const flecheFenetreAjoutPhoto = document.querySelector("#retour-a-fenetre-edition");
-    if(!eventRetourFenetreEditionExiste){
-      flecheFenetreAjoutPhoto.addEventListener("click", () => {
-        fermerFenetre("#modale-ajout-photo");
-        ouvrirFenetre("#modale-galerie", "modale-galerie");
-        })
-      eventRetourFenetreEditionExiste = true;
-    }
-
-  });
 });
 
 
@@ -401,13 +375,16 @@ function genererFenetreAjoutPhoto(){
   const titreModale = document.createElement("h2");
   titreModale.innerText = "Ajout Photo";
   const divAjoutPhoto = document.createElement("div");
-  divAjoutPhoto.classList.add("divAjoutPhoto");
+  divAjoutPhoto.classList.add("div-ajout-photo");
   const imageNoPhoto = document.createElement("img");
   imageNoPhoto.id = "image-no-photo";
   imageNoPhoto.src = "assets/icons/placeholder-image.svg";
   imageNoPhoto.alt = "Pas de photo";
   const texteAjouterPhoto = document.createElement("p");
   texteAjouterPhoto.innerHTML = "jpg, png : 4mo max";
+  const previewPhoto = document.createElement("div");
+  previewPhoto.id = "preview-photo";
+  previewPhoto.classList.add("display-hidden");
   const formAjoutPhoto = document.createElement("form");
   formAjoutPhoto.id = "form-ajout-photo";
   const labelAjoutPhoto = document.createElement("label");
@@ -461,6 +438,7 @@ function genererFenetreAjoutPhoto(){
   divAjoutPhoto.appendChild(labelAjoutPhoto);
   divAjoutPhoto.appendChild(ajoutPhoto);
   divAjoutPhoto.appendChild(texteAjouterPhoto);
+  divAjoutPhoto.appendChild(previewPhoto);
   formAjoutPhoto.appendChild(divAjoutPhoto);
   formAjoutPhoto.appendChild(labelTitre);
   formAjoutPhoto.appendChild(inputTitre);
@@ -473,5 +451,64 @@ function genererFenetreAjoutPhoto(){
   formAjoutPhoto.appendChild(ligneGrise);
   formAjoutPhoto.appendChild(bouttonValider);
   fenetreAjoutPhoto.appendChild(formAjoutPhoto);
+
+  // A mettre sous forme de fonction
+
+   
+  const selectionformAjoutPhoto = document.querySelector("#form-ajout-photo")
+  const imageChoisie = document.querySelector("#boutton-selection-photo") 
+  // Faire le css de preview photo et faire en sorte de charger la photo dans la preview
+  imageChoisie.addEventListener("input", () => {
+    ouvrirFenetre("#preview-photo", "preview-photo");
+  })
+  previewPhoto.addEventListener("click", () => {
+    ajoutPhoto.click();
+  })
+  const titreChoisi = document.querySelector("#titre-oeuvre")
+  const categorieChoisie = document.querySelector("#categorie-oeuvre");
+  selectionformAjoutPhoto.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const tailleImage = imageChoisie.files[0].size / 1024 / 1024;
+    if (imageChoisie.files[0].name != undefined && tailleImage <= 4){
+      let conversionCategorie = categorieChoisie.value
+      for (let i = 0; i < categoriesParDefaut.length; i++){
+        const rechercheCategorie = categoriesParDefaut[i];
+        if (conversionCategorie === rechercheCategorie.name){
+          conversionCategorie = Number(rechercheCategorie.id);
+        }
+      }
+      let dataAEnvoyer = new FormData();
+      dataAEnvoyer.append("image", imageChoisie.files[0]);
+      dataAEnvoyer.append("title", titreChoisi.value);
+      dataAEnvoyer.append("category", conversionCategorie);
+
+      fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          'Authorization': 'Bearer ' + tokenId.token
+        },
+        body: dataAEnvoyer
+      })
+      .then(() => {
+        return recuperationDonnees();
+      })
+      .then(() => {
+        const selectionGalerie = document.querySelector(".gallery")
+        selectionGalerie.innerHTML = ""
+        genererOeuvres(oeuvres);
+        fermerFenetre("#modale-ajout-photo");
+        const selectionModaleGalerie = document.querySelector("#modale-galerie");
+        selectionModaleGalerie.remove();
+        genererFenetreEditionGalerie(oeuvres);
+        ouvrirFenetre("#modale-galerie", "modale-galerie");
+        imageChoisie.files = null;
+        titreChoisi.value = "";
+        categorieChoisie.value = "";
+      })
+    }
+    else{
+      alert("Veuillez choisir une image de 4mo maximum");
+    }
+  })
 }
 
