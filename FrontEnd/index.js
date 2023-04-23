@@ -137,6 +137,16 @@ function genererBouttonModifierProjets(){
   TitreEtBoutton.appendChild(h2Portfolio);
   TitreEtBoutton.appendChild(bouttonProjets);
   sectionPortfolio.prepend(TitreEtBoutton);
+
+  
+  bouttonProjets.addEventListener('click', () => {
+  const verifSiFenetreEditionExiste = document.querySelector("#modale-galerie");
+  if(verifSiFenetreEditionExiste == null){
+    genererFenetreEditionGalerie(oeuvres);
+  }
+  ouvrirFenetre("#modale-galerie", "modale-galerie");
+  
+});
 }
 
 function genererEditMode() {
@@ -150,7 +160,7 @@ function genererEditMode() {
     // at index.js:148:13
     // (
       // cette erreur s'affiche quand on load la page sans etre connecte
-if (tokenId.token !== null && "undefined") {
+if (tokenId !== null && "undefined") {
   genererEditMode();
 }
 
@@ -340,15 +350,7 @@ let eventFermerFenetreAjoutPhotoExiste = false;
 let eventRetourFenetreEditionExiste = false;
 let eventValiderAjoutPhotoExiste = false;
 
-const bouttonModifierProjets = document.querySelector("#boutton-modifier-projets");
-bouttonModifierProjets.addEventListener('click', () => {
-  const verifSiFenetreEditionExiste = document.querySelector("#modale-galerie");
-  if(verifSiFenetreEditionExiste == null){
-    genererFenetreEditionGalerie(oeuvres);
-  }
-  ouvrirFenetre("#modale-galerie", "modale-galerie");
-  
-});
+
 
 function submitPossible(image,titre,categorie,boutton){
   if(image != undefined && titre.value != ""
@@ -481,8 +483,6 @@ function genererFenetreAjoutPhoto(){
   previewPhoto.addEventListener("click", () => {
     ajoutPhoto.click();
   });
-
-  // Le bouton valider s'affiche mal, confil
 
   inputTitre.addEventListener("input", () => {
     submitPossible(ajoutPhoto.files[0].name,inputTitre,selectCategorie,bouttonValider);
