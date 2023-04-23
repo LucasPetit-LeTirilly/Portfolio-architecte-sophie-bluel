@@ -265,7 +265,7 @@ footer nav ul {
 	padding: 11px 23px 11px 23px;
 }
 
-.boutton-modifier-photo {
+.bouton-modifier-photo {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 0.875em;
@@ -278,14 +278,14 @@ footer nav ul {
 	border: none;
 }
 
-.boutton-modifier-photo img {
+.bouton-modifier-photo img {
 	width: 18px;
 	height: 18px;
 	margin-right: 8px;
 }
 
 
-.titre-h2-et-boutton {
+.titre-h2-et-bouton {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -293,7 +293,7 @@ footer nav ul {
 }
 
 
-.boutton-modifier-projets {
+.bouton-modifier-projets {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 0.875em;
@@ -307,7 +307,7 @@ footer nav ul {
 	border: none;
 }
 
-.boutton-modifier-projets img {
+.bouton-modifier-projets img {
 	width: 18px;
 	height: 18px;
 	margin-right: 8px;
@@ -391,7 +391,7 @@ footer nav ul {
 	margin-bottom: 10.55px;
 }
 
-.boutton-ajouter-une-photo {
+.bouton-ajouter-une-photo {
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 0.875em;
@@ -495,7 +495,7 @@ footer nav ul {
 	margin-bottom: 7px;
 }
 
-#boutton-selection-photo {	
+#bouton-selection-photo {	
 	display: none;
 }
 
@@ -555,7 +555,7 @@ footer nav ul {
 	margin-top: 47px;
 }
 
-.boutton-valider-gris{
+.bouton-valider-gris{
 	text-align: center;
 	width: 56.4%;
 	font-family: 'Syne';
@@ -573,7 +573,7 @@ footer nav ul {
 	
 }
 
-.boutton-valider-vert{
+.bouton-valider-vert{
 	width: 56.4%;
 	font-family: 'Syne';
 	font-weight: 700;
