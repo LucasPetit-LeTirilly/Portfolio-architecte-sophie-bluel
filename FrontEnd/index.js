@@ -10,7 +10,7 @@ async function recuperationDonnees(){
 
 await recuperationDonnees();
 
-function genererOeuvres(figure){
+function genererGalerie(figure){
   const galerie = document.querySelector(".gallery");
   for (let i = 0; i < figure.length; i++){
     const oeuvre = figure[i];
@@ -27,16 +27,20 @@ function genererOeuvres(figure){
   }
 }
 
-genererOeuvres(oeuvres)
+genererGalerie(oeuvres)
 
+
+// Cette fonction prends en parametre l'id de la categorie selectionne en cliquant sur le filtre correspondant et filtre la liste
+// des oeuvres en fonction
 function filtrageOeuvre(filtreId){
   const oeuvresFiltrees = oeuvres.filter(function(oeuvre){
     return oeuvre.category.id == filtreId;
   });
   document.querySelector(".gallery").innerHTML = "";
-  genererOeuvres(oeuvresFiltrees);
+  genererGalerie(oeuvresFiltrees);
 };
 
+// Dans cette fonction le if correspond au comportement du bouton filtre 'Tous' et le else aux boutons qui realisent un filtrage
 function comportementFiltres(){
   const tousLesBoutons = document.querySelectorAll('.section-filtre button');
   tousLesBoutons.forEach((ceBoutton) => ceBoutton.addEventListener('click', (e) => {
@@ -46,7 +50,7 @@ function comportementFiltres(){
   e.target.classList.add('filtre-clique');
   if (e.target.dataset.id == 0){
     document.querySelector(".gallery").innerHTML = "";
-    genererOeuvres(oeuvres);
+    genererGalerie(oeuvres);
   } 
   else{
     filtrageOeuvre(e.target.dataset.id);
@@ -54,15 +58,15 @@ function comportementFiltres(){
   })); 
 }
 
-function genererBoutons(typeCategorie){
+function genererBoutons(listeCategorie){
   const ensembleBoutons = document.querySelector(".section-filtre");
   const boutonTous = document.createElement('button');
   boutonTous.dataset.id = 0;
   boutonTous.innerText = "Tous";
   boutonTous.classList.add('filtre-clique');
   ensembleBoutons.appendChild(boutonTous);
-  for (let i = 0; i < typeCategorie.length; i++){
-    const filtre = typeCategorie[i];
+  for (let i = 0; i < listeCategorie.length; i++){
+    const filtre = listeCategorie[i];
     const boutonElement = document.createElement("button");
     boutonElement.dataset.id = filtre.id;
     boutonElement.innerText = filtre.name;
@@ -78,6 +82,20 @@ genererBoutons(categories)
 
 let tokenId = localStorage.getItem("userToken");
 tokenId = JSON.parse(tokenId);
+
+function afficherDiv(idDeLaFenetre, classeDeLaFenetre){
+  const fenetreAOuvrir = document.querySelector(idDeLaFenetre);
+  if (fenetreAOuvrir.classList.contains("display-hidden")){
+    fenetreAOuvrir.classList.remove("display-hidden");
+    fenetreAOuvrir.classList.add(classeDeLaFenetre);
+  }
+}
+
+function cacherDiv(idDeLaFenetre){
+  const fenetreAFermer = document.querySelector(idDeLaFenetre);
+  fenetreAFermer.className = "";
+  fenetreAFermer.classList.add("display-hidden");
+}
 
 function genererRectangleNoir (){
   const body = document.querySelector("body")
@@ -119,7 +137,7 @@ function comportementBoutonModifierProjets(bouton){
     if(verifSiFenetreEditionExiste == null){
       genererFenetreEditionGalerie(oeuvres);
     }
-    ouvrirFenetre("#modale-galerie", "modale-galerie");
+    afficherDiv("#modale-galerie", "modale-galerie");
     });
 }
 
@@ -153,6 +171,7 @@ function genererEditMode() {
   sectionFiltre.classList.add('display-hidden');
 }
 
+// Cette condition determine si l'utilisateur est l'administrateur, et si oui les fonctionnalites additionnelles sont generees
 if (tokenId !== null && "undefined") {
   genererEditMode();
 }
@@ -188,28 +207,15 @@ function genererMiniGalerie(article){
   }
 }
 
-function ouvrirFenetre(idDeLaFenetre, classeDeLaFenetre){
-  const fenetreAOuvrir = document.querySelector(idDeLaFenetre);
-  if (fenetreAOuvrir.classList.contains("display-hidden")){
-    fenetreAOuvrir.classList.remove("display-hidden");
-    fenetreAOuvrir.classList.add(classeDeLaFenetre);
-  }
-}
-
-function fermerFenetre(idDeLaFenetre){
-  const fenetreAFermer = document.querySelector(idDeLaFenetre);
-  fenetreAFermer.className = "";
-  fenetreAFermer.classList.add("display-hidden");
-}
-
+// Function gerant la fermeture de la fenetre par l'icone croix
 function comportementCroixModaleGalerie(){
   const croixModaleGalerie = document.querySelector("#fermer-fenetre-edition-galerie");
   croixModaleGalerie.addEventListener('click', () => {
-    fermerFenetre("#modale-galerie")}
+    cacherDiv("#modale-galerie")}
     );
   const clicRacineFenetre = document.querySelector("#modale-galerie");
   clicRacineFenetre.addEventListener("click", () => {
-    fermerFenetre("#modale-galerie");
+    cacherDiv("#modale-galerie");
   });
   const clicFenetreModale = document.querySelector("#fenetre-edition-galerie");
   clicFenetreModale.addEventListener("click", (e) => {
@@ -218,6 +224,9 @@ function comportementCroixModaleGalerie(){
   })
 }
 
+// A la suite de la recuperation des donnes les deux galeries sont rechargees pour refleter les changement dans la base de donnee
+// Etant donnees que les logo de corbeilles ont des id sous la forme: supprimerOeuvre"Numero", la fonction match(/(\d+)/) se 
+// charge de ne garder que les numeros et de les passer dans une nouvelle variable
 async function supprimerOeuvre(oeuvreCliquee){
   const idADelete = oeuvreCliquee.id.match(/(\d+)/);
   fetch("http://localhost:5678/api/works/"+idADelete[0], {
@@ -232,55 +241,47 @@ async function supprimerOeuvre(oeuvreCliquee){
   .then(() => {
     const selectionGalerie = document.querySelector(".gallery")
     selectionGalerie.innerHTML = ""
-    genererOeuvres(oeuvres);
+    genererGalerie(oeuvres);
     const selectionModaleGalerie = document.querySelector("#modale-galerie");
     selectionModaleGalerie.remove();
     genererFenetreEditionGalerie(oeuvres);
-    ouvrirFenetre("#modale-galerie", "modale-galerie");
+    afficherDiv("#modale-galerie", "modale-galerie");
   })
 }
 
 async function comportementBoutonSuppression(){
   const tousLogosCorbeille = document.querySelectorAll(".logo-corbeille-mini-galerie");
-    tousLogosCorbeille.forEach((e) => {
-      e.addEventListener("click", (x) => {
-        x.preventDefault();
-        supprimerOeuvre(e)
-      })
+  tousLogosCorbeille.forEach((e) => {
+    e.addEventListener("click", (x) => {
+      x.preventDefault();
+      supprimerOeuvre(e)
     })
+  })
 }
-
-let eventFermerFenetreAjoutPhotoExiste = false;
-let eventRetourFenetreEditionExiste = false;
-
+// Fonction regissant le retour a la fenetre precedente et la fermeture de la fenetre ajout photo
 function comportementCroixEtFlecheFenetreAjoutPhoto(){
   const croixFenetreAjoutPhoto = document.querySelector("#fermer-fenetre-ajout-photo");
-  if(!eventFermerFenetreAjoutPhotoExiste){
-    croixFenetreAjoutPhoto.addEventListener('click', () => {
-      fermerFenetre("#modale-ajout-photo")}
-      );
+  croixFenetreAjoutPhoto.addEventListener('click', () => {
+    cacherDiv("#modale-ajout-photo")
+  });
     
-    const clicRacineFenetre = document.querySelector("#modale-ajout-photo");
-    clicRacineFenetre.addEventListener("click", () => {
-      fermerFenetre("#modale-ajout-photo");
-    });
-    
-    const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
-    clicFenetreModale.addEventListener("click", (e) => {
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    })
-    eventFermerFenetreAjoutPhotoExiste = true;
-  }
+  const clicRacineFenetre = document.querySelector("#modale-ajout-photo");
+  clicRacineFenetre.addEventListener("click", () => {
+    cacherDiv("#modale-ajout-photo");
+  });
+  
+  const clicFenetreModale = document.querySelector("#fenetre-ajout-photo");
+  clicFenetreModale.addEventListener("click", (e) => {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+  })
+
 
   const flecheFenetreAjoutPhoto = document.querySelector("#retour-a-fenetre-edition");
-  if(!eventRetourFenetreEditionExiste){
-    flecheFenetreAjoutPhoto.addEventListener("click", () => {
-      fermerFenetre("#modale-ajout-photo");
-      ouvrirFenetre("#modale-galerie", "modale-galerie");
-      })
-    eventRetourFenetreEditionExiste = true;
-  }
+  flecheFenetreAjoutPhoto.addEventListener("click", () => {
+    cacherDiv("#modale-ajout-photo");
+    afficherDiv("#modale-galerie", "modale-galerie");
+    })
 };
 
 function comportementBoutonAjoutPhoto(){
@@ -290,9 +291,8 @@ function comportementBoutonAjoutPhoto(){
     if(verifSiFenetreAjoutPhotoExiste == null){
       genererFenetreAjoutPhoto();
       }
-    fermerFenetre("#modale-galerie");
-    ouvrirFenetre("#modale-ajout-photo", "modale-ajout-photo");
-    comportementCroixEtFlecheFenetreAjoutPhoto();
+    cacherDiv("#modale-galerie");
+    afficherDiv("#modale-ajout-photo", "modale-ajout-photo");
   });
 }
 
@@ -333,33 +333,38 @@ async function genererFenetreEditionGalerie(travaux){
   comportementBoutonAjoutPhoto();
 }
 
+// Cette fonction verifie si les trois champs du formulaire d'ajout de photo ont ete remplis et si il est donc possible
+// de valider et d'envoyer les informations au server, l'utilisateur est notifie par le changement de couleur du bouton valider
 function submitPossible(image,titre,categorie,bouton){
   if(image != undefined && titre.value != "" && categorie.value != ""){
-    bouton.classList.remove("bouton-valider-gris")
+    bouton.classList.remove("bouton-valider-gris");
     bouton.classList.add("bouton-valider-vert");
   }
 }
 
+// Cette fonction regroupe les ajout et modification au DOM une fois qu'une nouvelle oeuvre a ete envoyee au serveur.
+// Les galeries sont rechargees, le formulaire d'ajout reinitialiser et l'utilisateur est redirige a la fenetre precedente
 function actionsHtmlApresEnvoiOeuvre(photo,titre,categorie,labelPhoto){
   const selectionGalerie = document.querySelector(".gallery")
   selectionGalerie.innerHTML = "";
-  genererOeuvres(oeuvres);
-  fermerFenetre("#modale-ajout-photo");
+  genererGalerie(oeuvres);
+  cacherDiv("#modale-ajout-photo");
   const selectionModaleGalerie = document.querySelector("#modale-galerie");
   selectionModaleGalerie.remove();
   genererFenetreEditionGalerie(oeuvres);
-  ouvrirFenetre("#modale-galerie", "modale-galerie");
+  afficherDiv("#modale-galerie", "modale-galerie");
   photo.files = null;
-  fermerFenetre("#preview-photo");
+  cacherDiv("#preview-photo");
   titre.value = "";
   categorie.value = "";
-  ouvrirFenetre("#image-no-photo","image-no-photo");
-  ouvrirFenetre("#texte-ajouter-photo","texte-ajouter-photo");
+  afficherDiv("#image-no-photo","image-no-photo");
+  afficherDiv("#texte-ajouter-photo","texte-ajouter-photo");
   labelPhoto.classList.remove("display-hidden");
   labelPhoto.classList.add("label-ajout-photo");
   alert("L'image a bien été envoyée");
 }
 
+// Une verification est faire pour empecher l'utilisateur d'uploader des images de tailles superieures a 4mo 
 async function envoyerDonneesOeuvre(photo,titre,categorie,labelPhoto){
   const tailleImage = photo.files[0].size / 1024 / 1024;
     if (photo.files[0].name != undefined && tailleImage <= 4){
@@ -395,14 +400,21 @@ async function envoyerDonneesOeuvre(photo,titre,categorie,labelPhoto){
     }
 }
 
+// Cette fonction regie le comportement de tous les elements dynamiques de la fenetre d'ajout de photo.
+// Les nombreux parametre de cette fonction correspondent aux element du DOM cibles par des variable dans
+// la fonction genererFenetreAjoutPhoto() qui se trouve un peu plus bas
+// Parmis les differents comportements nous trouvons: 
+// -La preview de l'image s'appretant a etre uploadee
+// -La verification que l'upload est possible a chaque fois qu'un champ est modifie afin de notifier l'utilisateur
+// -L'envoie des informations du formulaire au serveur
 function comportementElementsFenetreAjoutPhoto(photo,titre,categorie,preview,bouton,form,label){
   photo.addEventListener("input", () => {
-    fermerFenetre("#image-no-photo");
-    fermerFenetre("#texte-ajouter-photo");
-    fermerFenetre(".label-ajout-photo");
+    cacherDiv("#image-no-photo");
+    cacherDiv("#texte-ajouter-photo");
+    cacherDiv(".label-ajout-photo");
 
     preview.src = URL.createObjectURL(photo.files[0]);
-    ouvrirFenetre("#preview-photo", "preview-photo");
+    afficherDiv("#preview-photo", "preview-photo");
     submitPossible(photo.files[0].name,titre,categorie,bouton);
   });
   preview.addEventListener("click", () => {
@@ -427,7 +439,8 @@ function comportementElementsFenetreAjoutPhoto(photo,titre,categorie,preview,bou
   })
 }
 
-
+// Cette fonction contient un grand bloc de generation et d'attribution des elements au DOM
+// puis appelle les deux fonction regissant les elements interactifs qui sont definies plus haut
 function genererFenetreAjoutPhoto(){
   const body = document.querySelector("body");
   const modaleAjoutPhoto = document.createElement("aside");
@@ -534,6 +547,7 @@ function genererFenetreAjoutPhoto(){
   formAjoutPhoto.appendChild(boutonValider);
   fenetreAjoutPhoto.appendChild(formAjoutPhoto);
 
+  comportementCroixEtFlecheFenetreAjoutPhoto();
   comportementElementsFenetreAjoutPhoto(ajoutPhoto,inputTitre,selectCategorie,previewPhoto,boutonValider,formAjoutPhoto,labelAjoutPhoto);
 }
 
