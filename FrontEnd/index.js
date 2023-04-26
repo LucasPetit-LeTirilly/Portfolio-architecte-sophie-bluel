@@ -27,7 +27,7 @@ function genererGalerie(figure){
   }
 }
 
-genererGalerie(oeuvres)
+
 
 
 // Cette fonction prends en parametre l'id de la categorie selectionne en cliquant sur le filtre correspondant et filtre la liste
@@ -76,7 +76,7 @@ function genererBoutons(listeCategorie){
   comportementFiltres();
 }
 
-genererBoutons(categories)
+
 
 // Partie Edition
 
@@ -171,10 +171,7 @@ function genererEditMode() {
   sectionFiltre.classList.add('display-hidden');
 }
 
-// Cette condition determine si l'utilisateur est l'administrateur, et si oui les fonctionnalites additionnelles sont generees
-if (tokenId !== null && "undefined") {
-  genererEditMode();
-}
+
 
 function genererMiniGalerie(article){
   const selectFenetreModaleGalerie = document.querySelector("#fenetre-edition-galerie");
@@ -551,3 +548,13 @@ function genererFenetreAjoutPhoto(){
   comportementElementsFenetreAjoutPhoto(ajoutPhoto,inputTitre,selectCategorie,previewPhoto,boutonValider,formAjoutPhoto,labelAjoutPhoto);
 }
 
+async function executionPageIndex(){
+  genererGalerie(oeuvres);
+  genererBoutons(categories);
+  // Cette condition determine si l'utilisateur est l'administrateur, et si oui les fonctionnalites additionnelles sont generees
+  if (tokenId !== null && "undefined") {
+    genererEditMode();
+  }
+}
+
+executionPageIndex();
