@@ -1,8 +1,6 @@
 // Dans cette page de code, les fonctions sont definies par ordre d'apparition lors de l'utilisation de la page web.
 // Puis tout en bas de cette page, elles sont executees les unes a la suite des autres.
 
-
-
 // Ces deux variables servent a stocker les donnees recuperees depuis le serveur, soit les donnees des oeuvres a afficher dans la galerie,
 // et la liste des categories d'oeuvre.
 let oeuvres
@@ -15,7 +13,6 @@ async function recuperationDonnees() {
   categories = await fetch('http://localhost:5678/api/categories');
   categories = await categories.json();
 }
-
 
 // Cette fonction genere la galerie d'image presente sur la page
 function genererGalerie(figure) {
@@ -34,9 +31,6 @@ function genererGalerie(figure) {
     galerie.appendChild(oeuvreElement);
   }
 }
-
-
-
 
 // Cette fonction prend en parametre l'id de la categorie selectionne en cliquant sur le filtre correspondant et filtre la liste
 // des oeuvres en fonction
@@ -85,12 +79,9 @@ function genererBoutons(listeCategorie) {
   comportementFiltres();
 }
 
-
-
 // Partie Edition
 // Cette partie du code n'est executee en bas de cette page que si l'utilisateur possede le token d'authentification du site dans son
 // local storage. Elle concerne la partie edition du contenu du site.
-
 
 // Cette variable recupere la valeur du token stockee dans le local storage apres une connection reussie de l'utilisateur.
 let tokenId = localStorage.getItem("userToken");
@@ -183,7 +174,6 @@ function genererBouttonModifierProjets() {
   comportementBoutonModifierProjets(boutonProjets);
 }
 
-
 // Cette fonction appelle des fonctions definies precedement afin de generer les boutons de modifications.
 // Elle cache egalement les boutons de filtre
 function genererEditMode() {
@@ -193,7 +183,6 @@ function genererEditMode() {
   const sectionFiltre = document.querySelector(".section-filtre");
   sectionFiltre.classList.add('display-hidden');
 }
-
 
 // Cette function genere le code HTML de la mini galerie presente dans la fenetre d'edition de la galerie
 function genererMiniGalerie(article) {
@@ -298,7 +287,6 @@ function comportementCroixEtFlecheFenetreAjoutPhoto() {
     e.stopPropagation();
     e.stopImmediatePropagation();
   })
-
 
   const flecheFenetreAjoutPhoto = document.querySelector("#retour-a-fenetre-edition");
   flecheFenetreAjoutPhoto.addEventListener("click", () => {
@@ -431,8 +419,7 @@ function comportementElementsFenetreAjoutPhoto(photo, titre, categorie, preview,
   photo.addEventListener("input", () => {
     cacherDiv("#image-no-photo");
     cacherDiv("#texte-ajouter-photo");
-    cacherDiv(".label-ajout-photo");
-
+    cacherDiv("#label-ajout-photo");
     preview.src = URL.createObjectURL(photo.files[0]);
     afficherDiv("#preview-photo", "preview-photo");
     if (titre.value != "" && categorie.value != "") {
