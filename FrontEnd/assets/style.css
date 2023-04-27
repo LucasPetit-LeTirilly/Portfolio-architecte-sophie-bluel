@@ -136,7 +136,7 @@ li:hover {
 	display: flex;
 	margin-top: 21px;
 	margin-bottom: 51px;
-	margin-left: 19%;
+	margin-left: 24%;
 	gap: 10px;
 }
 
@@ -294,6 +294,7 @@ footer nav ul {
 
 
 .bouton-modifier-projets {
+	cursor: pointer;
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 0.875em;
@@ -327,12 +328,14 @@ footer nav ul {
 
 .fenetre-edition-galerie {
 	width: 43.75%;
+	max-height: 90%;
 	background-color: white;
 	text-align: center;
 	border-radius: 10px;
 }
 
 #fermer-fenetre-edition-galerie {
+	cursor: pointer;
 	width: 12px;
 	height: 12px;
 	margin-top: 32px;
@@ -366,6 +369,7 @@ footer nav ul {
 }
 
 .logo-corbeille-mini-galerie {
+	cursor: pointer;
 	width: 22%;
 	height: 16.3%;
 	min-width: 10px;
@@ -392,6 +396,7 @@ footer nav ul {
 }
 
 .bouton-ajouter-une-photo {
+	cursor: pointer;
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 0.875em;
@@ -442,11 +447,13 @@ footer nav ul {
 }
 
 #retour-a-fenetre-edition {
+	cursor: pointer;
 	width: 21px;
 	height: 14px;
 }
 
 #fermer-fenetre-ajout-photo {
+	cursor: pointer;
 	width: 12px;
 	height: 12px;
 }
@@ -484,6 +491,7 @@ footer nav ul {
 }
 
 .label-ajout-photo {
+	cursor: pointer;
 	font-family: 'Work Sans';
 	font-weight: 500;
 	font-size: 14px;
@@ -556,6 +564,7 @@ footer nav ul {
 }
 
 .bouton-valider-gris{
+	cursor: pointer;
 	text-align: center;
 	width: 56.4%;
 	font-family: 'Syne';
@@ -574,6 +583,7 @@ footer nav ul {
 }
 
 .bouton-valider-vert{
+	cursor: pointer;
 	width: 56.4%;
 	font-family: 'Syne';
 	font-weight: 700;
@@ -641,6 +651,7 @@ footer nav ul {
 }
 
 .se-connecter{
+	cursor: pointer;
 	width: 47%;
 	height: 36px;
 	font-family: 'Syne';

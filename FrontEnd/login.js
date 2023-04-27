@@ -1,4 +1,6 @@
-function executionPageLogin(){
+// Cette fonction regroupe toutes les actions de la page de login
+
+function executionPageLogin() {
   const form = document.querySelector('#loginForm');
 
   form.addEventListener('submit', (x) => {
@@ -9,7 +11,10 @@ function executionPageLogin(){
       "email": email,
       "password": password
     };
-    
+
+    // Si les informations rentrees ne sont pas correctes un message d'alerte previent l'utilisateur, si elles sont correctes
+    // le token d'authentification est stocke dans le local storage et l'utilisateur est redirige vers la page principale, il est egalement
+    // notifie que la connection a bien ete effectuee
     fetch('http://localhost:5678/api/users/login', {
       method: "POST",
       headers: {
@@ -17,23 +22,23 @@ function executionPageLogin(){
       },
       body: JSON.stringify(donneesLogin),
     })
-    .then(reponse => {
-      if (reponse.status === 200) {
-        const tokenId = reponse.json();
-        return tokenId;
-      }
-      else {
-        alert("Combinaison adresse e-mail et mot de passe incorrecte");
-        return false
-      }
-    })
-    .then((tokenId) => {
-      if (tokenId !== false) {
-        localStorage.setItem("userToken", JSON.stringify(tokenId));
-        alert("Vous êtes connectée en tant qu'administratrice");
-        location.href = "index.html";
-      }
-    })
+      .then(reponse => {
+        if (reponse.status === 200) {
+          reponse.json()
+            .then((promesse) => {
+              localStorage.setItem("userToken", JSON.stringify(promesse))
+              alert("Vous êtes connectée en tant qu'administratrice");
+            })
+
+            .then(() => {
+              location.href = "index.html";
+            })
+        }
+        else {
+          alert("Combinaison adresse e-mail et mot de passe incorrecte");
+          return false
+        }
+      })
   })
 }
 
