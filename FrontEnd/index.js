@@ -569,6 +569,15 @@ function genererFenetreAjoutPhoto() {
   comportementElementsFenetreAjoutPhoto(ajoutPhoto, inputTitre, selectCategorie, previewPhoto, boutonValider, formAjoutPhoto, labelAjoutPhoto);
 }
 
+function permettreLogout(){
+  let lienLogin = document.querySelector("#lien-login");
+  lienLogin.href = ""
+  lienLogin.innerText = "logout"
+  lienLogin.addEventListener("click", () => {
+    localStorage.removeItem("userToken");
+  })
+}
+
 // Cette fonction regroupe toutes les fonctions de cette page et est appelee afin de toutes les executes dans l'ordre
 async function executionPageIndex() {
   await recuperationDonnees();
@@ -577,6 +586,7 @@ async function executionPageIndex() {
   // Cette condition determine si l'utilisateur est l'administrateur, et si oui les fonctionnalites additionnelles sont generees
   if (tokenId !== null && "undefined") {
     genererEditMode();
+    permettreLogout();
   }
 }
 
